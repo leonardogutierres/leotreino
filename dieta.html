@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Dieta Semanal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <style>
+        :root {
+            --bg-color: #121212;
+            --container-bg: #1e1e1e;
+            --text-color: #e0e0e0;
+            --primary-color: #64b5f6;
+            --secondary-color: #81c784;
+            --accent-color: #1e3a5f;
+            --refeicao-bg: #1e283c;
+            --item-bg: #1a2332;
+            --obs-color: #da7406;
+            --btn-bg: #1565c0;
+            --btn-text: #fff;
+        }
+        .light-mode {
+            --bg-color: #f2f2f2;
+            --container-bg: #fff;
+            --text-color: #222;
+            --primary-color: #0b3470;
+            --secondary-color: #197b30;
+            --accent-color: #deebff;
+            --refeicao-bg: #ebf5fb;
+            --item-bg: #e9f2fe;
+            --obs-color: #d97706;
+            --btn-bg: #0275d8;
+            --btn-text: #fff;
+        }
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            transition: background 0.3s, color 0.3s;
+            -webkit-font-smoothing: antialiased;
+        }
+        .container {
+            max-width: 580px;
+            margin: 0 auto;
+            padding: 16px;
+            background: var(--container-bg);
+            min-height: 100vh;
+            transition: background 0.3s;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            margin-top: 8px;
+        }
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            font-weight: 800;
+            margin: 0;
+            letter-spacing: 1px;
+            flex: 1;
+            font-size: 1.5rem;
+        }
+        .header-actions {
+            display: flex;
+            gap: 8px;
+        }
+        .theme-toggle-button,
+        .nav-link-button {
+            background: var(--accent-color);
+            color: var(--primary-color);
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            font-size: 1.1em;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: transform 0.2s;
+        }
+        .theme-toggle-button:active,
+        .nav-link-button:active {
+            transform: scale(0.95);
+        }
+
+        .refeicao {
+            background: var(--refeicao-bg);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+            transition: background 0.3s;
+        }
+        .refeicao-titulo {
+            font-weight: bold;
+            font-size: 1.1em;
+            color: var(--secondary-color);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .refeicao-horario {
+            color: var(--primary-color);
+            font-size: 0.9em;
+        }
+        .item {
+            background: var(--item-bg);
+            border-radius: 5px;
+            padding: 8px 12px;
+            margin-bottom: 8px;
+            transition: background 0.3s;
+        }
+        .item-nome {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        .item-quantidade {
+            color: var(--primary-color);
+            font-weight: bold;
+            margin-left: 8px;
+        }
+        .observacoes {
+            background: var(--refeicao-bg);
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 24px;
+        }
+        .observacoes h2 {
+            color: var(--obs-color);
+            font-size: 1.2em;
+            margin-top: 0;
+            margin-bottom: 12px;
+        }
+        .obs-item {
+            margin-bottom: 10px;
+            line-height: 1.6;
+            padding-left: 20px;
+            position: relative;
+            font-size: 0.95rem;
+        }
+        .obs-item:before {
+            content: "▪";
+            position: absolute;
+            left: 0;
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+        .destaque {
+            color: var(--obs-color);
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-actions">
+                <a href="/treino" class="nav-link-button" title="Voltar aos treinos">🏋️</a>
+            </div>
+            <h1>Dieta Semanal</h1>
+            <div class="header-actions">
+                <button class="theme-toggle-button" onclick="toggleThemeMode()">
+                    <span id="theme-icon">☀️</span>
+                </button>
+            </div>
+        </header>
+        
+        <!-- REFEIÇÃO 1 -->
+        <div class="refeicao">
+            <div class="refeicao-titulo">
+                🌅 REFEIÇÃO 1 <span class="refeicao-horario">- EM JEJUM</span>
+            </div>
+            <div class="item">
+                <span class="item-nome">Clembuterol</span>
+                <span class="item-quantidade">1ml</span>
+            </div>
+            <div class="item" style="background: rgba(218, 116, 6, 0.1);">
+                <span class="item-nome" style="color: var(--obs-color);">⚠️ Subir 0,5ml por semana até chegar em 2ml</span>
+            </div>
+            <div class="item">
+                <span class="item-nome">Ômega 3</span>
+                <span class="item-quantidade">3g</span>
+            </div>
+            <div class="item">
+                <span class="item-nome">Vitamina D + K2</span>
+                <span class="item-quantidade">6000ui + 150mcg</span>
+            </div>
+        </div>
+        
+        <!-- REFEIÇÃO 2 -->
+        <div class="refeicao">
+            <div class="refeicao-titulo">
+                🍽️ REFEIÇÃO 2 <span class="refeicao-horario">- ALMOÇO: 12:00</span>
+            </div>
+            <div class="item">
+                <span class="item-nome">Arroz branco</span>
+                <span class="item-quantidade">100g</span>
+            </div>
+            <div class="item">
+                <span class="item-nome">Peito de Frango</span>
+                <span class="item-quantidade">300g</span>
+            </div>
+            <div class="item">
+                <span class="item-nome">Salada e legumes</span>
+                <span class="item-quantidade">à vontade</span>
+            </div>
+            <div class="item">
+                <span class="item-nome">Creatina</span>
+                <span class="item-quantidade">10g</span>
+            </div>
+            <div class="item">
+                <span class="item-nome">Glifage XR</span>
+                <span class="item-quantidade">500mg</span>
+            </div>
+        </div>
+        
+        <!-- REFEIÇÃO 3 -->
+        <div class="refeicao">
+            <div class="refeicao-titulo">
+                ☕ REFEIÇÃO 3 <span class="refeicao-horario">- CAFÉ DA TARDE: 15:00</span>
+            </div>
+            <div class="item">
+                <span class="item-nome">Iogurte Pense Zero Batavo</span>
+                <span class="item-quantidade">200ml</span>
+            </div>
+            <div class="item">
+                <span class="item-nome">Whey</span>
+                <span class="item-quantidade">60g</span>
+            </div>
+            <div class="item">
+                <span class="item-nome">Psyllium</span>
+                <span class="item-quantidade">10g</span>
+            </div>
+            <div class="item">
+                <span class="item-nome">Banana</span>
+                <span class="item-quantidade">70g</span>
+            </div>
+        </div>
+        
+        <!-- REFEIÇÃO 4 -->
+        <div class="refeicao">
+            <div class="refeicao-titulo">
+                🌙 REFEIÇÃO 4 <span class="refeicao-horario">- JANTA: 18:00</span>
+            </div>
+            <div class="item">
+                <span class="item-nome">Arroz branco</span>
+                <span class="item-quantidade">100g</span>
+            </div>
+            <div class="item">
+                <span class="item-nome">Peito de Frango</span>
+                <span class="item-quantidade">200g</span>
+            </div>
+        </div>
+        
+        <!-- OBSERVAÇÕES -->
+        <div class="observacoes">
+            <h2>📋 OBSERVAÇÕES IMPORTANTES</h2>
+            
+            <div class="obs-item">
+                <span class="destaque">LIBERADO:</span> Consumir no mínimo 400g de salada e legumes por dia
+            </div>
+            <div class="obs-item">
+                Sal, temperos, vinagre e adoçante
+            </div>
+            <div class="obs-item">
+                <span class="destaque">PESAR TODOS OS ALIMENTOS DEPOIS DE PRONTOS</span>
+            </div>
+            <div class="obs-item">
+                Café, chá, chimarrão, refri zero e suco light
+            </div>
+            <div class="obs-item">
+                Não fazer alterações na dieta por conta própria, inclusive nos finais de semana
+            </div>
+            <div class="obs-item">
+                <span class="destaque">60min de cardio por dia</span>
+            </div>
+            <div class="obs-item">
+                Azeite para temperar a salada
+            </div>
+            <div class="obs-item">
+                <span class="destaque">5L de água por dia</span>
+            </div>
+            <div class="obs-item">
+                <span class="destaque">1 refeição livre por semana, sem exageros</span>
+            </div>
+            
+            <div class="obs-item" style="margin-top: 16px;">
+                <span class="destaque">NÃO USAR/CONSUMIR:</span> Açúcar e suco de frutas ou de caixa
+            </div>
+            
+            <div class="obs-item" style="margin-top: 16px;">
+                <span class="destaque">PODE USAR (COM MODERAÇÃO):</span> Um pouco de óleo de girassol para preparar os alimentos
+            </div>
+            
+            <div style="margin-top: 20px; padding: 12px; background: rgba(218, 116, 6, 0.1); border-radius: 6px; border-left: 4px solid var(--obs-color);">
+                <strong style="color: var(--obs-color);">⚠️ ATENÇÃO:</strong><br>
+                Para que consigamos alcançar seus objetivos é de fundamental importância que você siga exatamente o que foi prescrito.
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Aplica o tema salvo (mesmo esquema do index e remedio)
+        function applySavedTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const icon = document.getElementById('theme-icon');
+            if (savedTheme === 'light') {
+                document.body.classList.add('light-mode');
+                if (icon) icon.textContent = '🌙';
+            } else {
+                document.body.classList.add('dark-mode');
+                if (icon) icon.textContent = '☀️';
+            }
+        }
+
+        // Alterna o tema e salva no localStorage
+        function toggleThemeMode() {
+            const body = document.body;
+            const icon = document.getElementById('theme-icon');
+            if (body.classList.contains('dark-mode')) {
+                body.classList.remove('dark-mode');
+                body.classList.add('light-mode');
+                localStorage.setItem('theme', 'light');
+                if (icon) icon.textContent = '🌙';
+            } else {
+                body.classList.remove('light-mode');
+                body.classList.add('dark-mode');
+                localStorage.setItem('theme', 'dark');
+                if (icon) icon.textContent = '☀️';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            applySavedTheme();
+        });
+    </script>
+</body>
+</html>
