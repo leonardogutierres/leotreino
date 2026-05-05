@@ -1,6 +1,98 @@
 {
   "TERCA-FEIRA": [
     {
+      "nome": "Mobilidade quadril - Frog",
+      "series": 3,
+      "reps": [
+        "15"
+      ],
+      "intervalo": "1 min",
+      "video_id": "VWHQLFxGSRc",
+      "observacao": "Mobilidade"
+    },
+    {
+      "nome": "Mobilidade quadril - 90/90",
+      "series": 3,
+      "reps": [
+        "15"
+      ],
+      "intervalo": "1 min",
+      "video_id": "fB1mjgyQdjg",
+      "observacao": "Mobilidade"
+    },
+    {
+      "nome": "Extensor",
+      "series": 4,
+      "reps": [
+        "Ver progressao*"
+      ],
+      "intervalo": "2 min",
+      "video_id": "yvOL5kqT7LM",
+      "observacao": "2s de pico de contracao"
+    },
+    {
+      "nome": "Agachamento livre",
+      "series": 4,
+      "reps": [
+        "Ver progressao*"
+      ],
+      "intervalo": "2 min",
+      "video_id": "-tpbcmoHRHs",
+      "observacao": "Barra livre"
+    },
+    {
+      "nome": "Leg 45",
+      "series": 4,
+      "reps": [
+        "Ver progressao*"
+      ],
+      "intervalo": "2 min",
+      "video_id": "SbSPL5d_-vY",
+      "observacao": ""
+    },
+    {
+      "nome": "Stiff",
+      "series": 3,
+      "reps": [
+        "Ver progressao*"
+      ],
+      "intervalo": "2 min",
+      "video_id": "mnVDYVJ_Wzs",
+      "observacao": ""
+    },
+    {
+      "nome": "Flexor sentado",
+      "series": 3,
+      "reps": [
+        "Ver progressao*"
+      ],
+      "intervalo": "2 min",
+      "video_id": "Pu6Jp_KEDRw",
+      "observacao": ""
+    },
+    {
+      "nome": "Panturrilha sentado",
+      "series": 4,
+      "reps": [
+        "Ver progressao*"
+      ],
+      "intervalo": "1 min",
+      "video_id": "1W0djgDRAPs",
+      "observacao": ""
+    },
+    {
+      "nome": "Panturrilha em pe",
+      "series": 3,
+      "reps": [
+        "Ver progressao*"
+      ],
+      "intervalo": "1 min",
+      "video_id": "Kdg_CwM2TCk",
+      "observacao": ""
+    }
+  ],
+  "QUARTA-FEIRA": [
+    {
       "nome": "Supino inclinado",
       "series": 4,
       "reps": [
@@ -91,7 +183,7 @@
       "observacao": ""
     }
   ],
-  "QUARTA-FEIRA": [
+  "QUINTA-FEIRA": [
     {
       "nome": "Puxada aberta",
       "series": 4,
@@ -163,7 +255,7 @@
       "observacao": ""
     }
   ],
-  "QUINTA-FEIRA": [
+  "SABADO": [
     {
       "nome": "Desenvolvimento de ombros",
       "series": 4,
@@ -242,98 +334,6 @@
       ],
       "intervalo": "1 min",
       "video_id": "-jIfgL11pRI",
-      "observacao": ""
-    }
-  ],
-  "SABADO": [
-    {
-      "nome": "Mobilidade quadril - Frog",
-      "series": 3,
-      "reps": [
-        "15"
-      ],
-      "intervalo": "1 min",
-      "video_id": "VWHQLFxGSRc",
-      "observacao": "Mobilidade"
-    },
-    {
-      "nome": "Mobilidade quadril - 90/90",
-      "series": 3,
-      "reps": [
-        "15"
-      ],
-      "intervalo": "1 min",
-      "video_id": "fB1mjgyQdjg",
-      "observacao": "Mobilidade"
-    },
-    {
-      "nome": "Extensor",
-      "series": 4,
-      "reps": [
-        "Ver progressao*"
-      ],
-      "intervalo": "2 min",
-      "video_id": "yvOL5kqT7LM",
-      "observacao": "2s de pico de contracao"
-    },
-    {
-      "nome": "Agachamento livre",
-      "series": 4,
-      "reps": [
-        "Ver progressao*"
-      ],
-      "intervalo": "2 min",
-      "video_id": "-tpbcmoHRHs",
-      "observacao": "Barra livre"
-    },
-    {
-      "nome": "Leg 45",
-      "series": 4,
-      "reps": [
-        "Ver progressao*"
-      ],
-      "intervalo": "2 min",
-      "video_id": "SbSPL5d_-vY",
-      "observacao": ""
-    },
-    {
-      "nome": "Stiff",
-      "series": 3,
-      "reps": [
-        "Ver progressao*"
-      ],
-      "intervalo": "2 min",
-      "video_id": "mnVDYVJ_Wzs",
-      "observacao": ""
-    },
-    {
-      "nome": "Flexor sentado",
-      "series": 3,
-      "reps": [
-        "Ver progressao*"
-      ],
-      "intervalo": "2 min",
-      "video_id": "Pu6Jp_KEDRw",
-      "observacao": ""
-    },
-    {
-      "nome": "Panturrilha sentado",
-      "series": 4,
-      "reps": [
-        "Ver progressao*"
-      ],
-      "intervalo": "1 min",
-      "video_id": "1W0djgDRAPs",
-      "observacao": ""
-    },
-    {
-      "nome": "Panturrilha em pe",
-      "series": 3,
-      "reps": [
-        "Ver progressao*"
-      ],
-      "intervalo": "1 min",
-      "video_id": "Kdg_CwM2TCk",
       "observacao": ""
     }
   ],
