@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>Treinos Semanais Pro</title>
+  <title>LeoTreino</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <!-- PWA -->
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -419,6 +419,61 @@
 
     /* Scroll suave ao focar exercício */
     .exercicio { scroll-margin-top: 180px; }
+
+    /* Floating timer global */
+    .floating-timer-global {
+      position: fixed;
+      bottom: calc(env(safe-area-inset-bottom) + 20px);
+      left: 50%; transform: translateX(-50%);
+      z-index: 1000;
+      background: var(--glass-bg);
+      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      border: 1px solid var(--border-color);
+      border-radius: 22px;
+      padding: 14px 28px;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 6px 28px rgba(0,0,0,.5);
+      min-width: 190px;
+    }
+    .floating-timer-global.active { display: flex; }
+    .floating-timer-global.warning .timer-circle-progress { stroke: var(--warning-color); }
+    .floating-timer-global.warning .timer-text { color: var(--warning-color); }
+    .floating-timer-global.finished .timer-circle-progress { stroke: var(--success-color); }
+    .floating-timer-global.finished .timer-text { color: var(--success-color); }
+    .floating-timer-label {
+      font-size: 0.62em; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--nav-item-color);
+    }
+
+    /* PR badge */
+    .pr-badge {
+      font-size: 0.68em; color: var(--warning-color); margin-left: 4px;
+      display: none; vertical-align: middle;
+    }
+    .pr-badge.visible { display: inline; }
+
+    /* Modal Histórico */
+    .history-modal {
+      display: none; position: fixed; inset: 0; z-index: 1500;
+      background: rgba(0,0,0,.8); align-items: center; justify-content: center;
+    }
+    .history-modal.show { display: flex; }
+    .history-modal-content {
+      width: 90%; max-width: 480px; background: var(--container-bg); border-radius: 12px;
+      padding: 20px; position: relative; box-shadow: 0 6px 20px rgba(0,0,0,.35);
+      max-height: 80vh; overflow-y: auto;
+    }
+    .history-title { color: var(--primary-color); font-weight: 900; font-size: 1.1em; margin-bottom: 14px; }
+    .history-item {
+      background: var(--card-bg); border-radius: 10px; padding: 12px 14px; margin-bottom: 10px;
+      border: 1px solid var(--border-color);
+    }
+    .history-item-day { font-weight: 800; color: var(--primary-color); font-size: 0.95em; }
+    .history-item-meta { font-size: 0.82em; color: var(--nav-item-color); margin-top: 4px; }
+    .history-empty { color: var(--nav-item-color); text-align: center; padding: 20px; font-size: 0.9em; }
   </style>
 </head>
 <body>
@@ -429,6 +484,7 @@
         <div class="header-actions">
           <a href="remedio.html" class="nav-link-button" title="Remédios">💊</a>
           <a href="dieta.html" class="nav-link-button" title="Dieta">🍽️</a>
+          <button class="reset-button" id="historico-button" title="Histórico">📊</button>
           <button class="reset-button" id="reset-day-workout-button" title="Zerar Treino do Dia">🔄</button>
           <button class="theme-toggle-button" id="theme-toggle-button" title="Alternar Tema">
             <span id="theme-icon">☀️</span>
@@ -493,6 +549,32 @@
     </div>
   </div>
 
+  <!-- Floating Timer Global -->
+  <div id="floating-timer" class="floating-timer-global" aria-live="polite">
+    <span class="floating-timer-label">⏱ descanso</span>
+    <div class="timer-ring-wrap">
+      <svg class="timer-svg" viewBox="0 0 80 80">
+        <circle class="timer-circle-bg" cx="40" cy="40" r="35"></circle>
+        <circle class="timer-circle-progress" cx="40" cy="40" r="35"
+          stroke-dasharray="219.9" stroke-dashoffset="219.9"></circle>
+      </svg>
+      <span class="timer-text"></span>
+    </div>
+    <div class="timer-controls">
+      <button class="timer-adjust-btn" onclick="window.adjustCurrentTimer(-10)">-10s</button>
+      <button class="timer-adjust-btn" onclick="window.adjustCurrentTimer(10)">+10s</button>
+    </div>
+  </div>
+
+  <!-- Modal Histórico -->
+  <div id="historicoModal" class="history-modal" aria-hidden="true">
+    <div class="history-modal-content">
+      <span id="closeHistoricoModal" class="close-button">&times;</span>
+      <div class="history-title">📊 Histórico de Treinos</div>
+      <div id="historico-lista"></div>
+    </div>
+  </div>
+
   <!-- Toast -->
   <div id="toast-container" class="toast-container"></div>
 
@@ -516,6 +598,7 @@
     let loadedWorkouts = {};
     const activeTimers = {};
     let sessionStartTime = null;
+    let currentTimerId = null;
     let sessionTimerInterval = null;
     let audioCtx = null;
 
@@ -609,6 +692,15 @@
 
     window.saveWeight = function (dayId, exIndex, serieIndex, weight) {
       localStorage.setItem(`weight-${dayId}-${exIndex}-${serieIndex}`, String(weight ?? ''));
+      const newW = parseFloat(weight) || 0;
+      if (newW > 0) {
+        const prKey = `pr-max-${dayId}-${exIndex}`;
+        const current = parseFloat(localStorage.getItem(prKey)) || 0;
+        if (newW > current) {
+          localStorage.setItem(prKey, String(newW));
+          window.showToast(`🏆 Novo recorde! ${newW}kg`, 'warning', 2500);
+        }
+      }
     };
 
     window.loadWeight = function (dayId, exIndex, serieIndex) {
@@ -624,7 +716,7 @@
       return saved !== null ? saved : fallback;
     };
 
-    // activeTimers agora armazena { intervalId, endTime, duration, timerElementId }
+    // Timer usa floating global — não altera DOM do exercício
     window.startTimer = function (timerElementId, duration) {
       if (duration === undefined) duration = getTimerDuration();
       for (const id in activeTimers) {
@@ -632,28 +724,18 @@
       }
       window.stopTimer(timerElementId);
 
-      const el = document.getElementById(timerElementId);
+      const el = document.getElementById('floating-timer');
       if (!el) return;
       const textEl = el.querySelector('.timer-text');
       const prog   = el.querySelector('.timer-circle-progress');
       if (!textEl || !prog) return;
 
-      if (!el.querySelector('.timer-controls')) {
-        const controls = document.createElement('div');
-        controls.className = 'timer-controls';
-        controls.innerHTML = `
-          <button class="timer-adjust-btn" onclick="window.adjustTimer('${timerElementId}', -10)">-10s</button>
-          <button class="timer-adjust-btn" onclick="window.adjustTimer('${timerElementId}', 10)">+10s</button>
-        `;
-        el.appendChild(controls);
-      }
-
+      currentTimerId = timerElementId;
       el.classList.add('active');
       el.classList.remove('warning', 'finished');
       prog.style.strokeDasharray = String(circumference);
 
       const endTime = Date.now() + duration * 1000;
-      // Salva no localStorage para recuperar se o app for suspenso
       localStorage.setItem('active-timer-id',  timerElementId);
       localStorage.setItem('active-timer-end', endTime);
       localStorage.setItem('active-timer-dur', duration);
@@ -672,6 +754,7 @@
       const onFinish = () => {
         clearInterval(activeTimers[timerElementId]?.intervalId);
         delete activeTimers[timerElementId];
+        currentTimerId = null;
         localStorage.removeItem('active-timer-id');
         localStorage.removeItem('active-timer-end');
         localStorage.removeItem('active-timer-dur');
@@ -684,11 +767,7 @@
         window.vibrar([200, 100, 200]);
         window.showToast('✅ Descanse acabou! Próxima série!', 'success', 3000);
         setTimeout(() => {
-          if (!activeTimers[timerElementId]) {
-            el.classList.remove('active', 'finished');
-            const controls = el.querySelector('.timer-controls');
-            if (controls) controls.remove();
-          }
+          if (!activeTimers[timerElementId]) el.classList.remove('active', 'finished');
         }, 5000);
       };
 
@@ -702,16 +781,19 @@
         } else if (remaining <= 0) {
           onFinish();
         }
-      }, 500); // 500ms para maior precisão ao voltar do background
+      }, 500);
 
       activeTimers[timerElementId] = { intervalId, endTime, duration, onFinish };
     };
 
+    window.adjustCurrentTimer = function (delta) {
+      if (currentTimerId) window.adjustTimer(currentTimerId, delta);
+    };
+
     window.adjustTimer = function (timerElementId, delta) {
       const entry = activeTimers[timerElementId];
-      const el = document.getElementById(timerElementId);
+      const el = document.getElementById('floating-timer');
       if (!entry || !el) return;
-      // Ajusta o endTime
       entry.endTime = Math.max(Date.now() + 1000, entry.endTime + delta * 1000);
       localStorage.setItem('active-timer-end', entry.endTime);
       const remaining = Math.max(0, Math.round((entry.endTime - Date.now()) / 1000));
@@ -730,18 +812,17 @@
         clearInterval(entry.intervalId);
         delete activeTimers[timerElementId];
       }
+      if (currentTimerId === timerElementId) currentTimerId = null;
       localStorage.removeItem('active-timer-id');
       localStorage.removeItem('active-timer-end');
       localStorage.removeItem('active-timer-dur');
-      const el = document.getElementById(timerElementId);
+      const el = document.getElementById('floating-timer');
       if (!el) return;
       el.classList.remove('active', 'warning', 'finished');
-      const textEl   = el.querySelector('.timer-text');
-      const prog     = el.querySelector('.timer-circle-progress');
-      const controls = el.querySelector('.timer-controls');
-      if (textEl)   textEl.textContent = '';
-      if (prog)     prog.style.strokeDashoffset = String(circumference);
-      if (controls) controls.remove();
+      const textEl = el.querySelector('.timer-text');
+      const prog   = el.querySelector('.timer-circle-progress');
+      if (textEl) textEl.textContent = '';
+      if (prog)   prog.style.strokeDashoffset = String(circumference);
     };
 
     // Quando o app volta ao foco (tela desbloqueada / volta do Safari)
@@ -769,8 +850,8 @@
           delete activeTimers[savedId];
         }
 
-        // Atualiza visual
-        const el = document.getElementById(savedId);
+        // Atualiza visual no floating timer
+        const el = document.getElementById('floating-timer');
         if (el) {
           const textEl = el.querySelector('.timer-text');
           const prog   = el.querySelector('.timer-circle-progress');
@@ -778,11 +859,7 @@
           if (prog)   prog.style.strokeDashoffset = '0';
           el.classList.remove('warning');
           el.classList.add('active', 'finished');
-          setTimeout(() => {
-            el.classList.remove('active', 'finished');
-            const controls = el.querySelector('.timer-controls');
-            if (controls) controls.remove();
-          }, 5000);
+          setTimeout(() => { el.classList.remove('active', 'finished'); }, 5000);
         }
 
         // Alerta ao voltar
@@ -954,11 +1031,16 @@
       }
     };
 
+    window.salvarHistorico = function (dayId, duracao, volume) {
+      const historico = JSON.parse(localStorage.getItem('historico') || '[]');
+      historico.unshift({ data: new Date().toLocaleDateString('pt-BR'), dia: dayId, duracao, volume });
+      if (historico.length > 50) historico.length = 50;
+      localStorage.setItem('historico', JSON.stringify(historico));
+    };
+
     window.finalizarTreino = function (dayId) {
-      // Para o timer de sessão
       if (sessionTimerInterval) clearInterval(sessionTimerInterval);
 
-      // Calcula duração total
       const diff = Math.floor((Date.now() - sessionStartTime) / 1000);
       const h = Math.floor(diff / 3600);
       const m = Math.floor((diff % 3600) / 60);
@@ -967,47 +1049,55 @@
         ? `${h}h ${String(m).padStart(2,'0')}min`
         : `${m}min ${String(s).padStart(2,'0')}s`;
 
+      // Calcular volume total antes de salvar histórico
+      const exercises = loadedWorkouts[dayId] || [];
+      let volumeTotal = 0;
+      exercises.forEach((ex, exIndex) => {
+        (ex.reps || []).forEach((rep, sIdx) => {
+          const weight = parseFloat(window.loadWeight(dayId, exIndex, sIdx)) || 0;
+          const repsStr = window.loadRep(dayId, exIndex, sIdx, rep ? String(rep) : '');
+          const repsMatch = String(repsStr).match(/\d+/);
+          const reps = repsMatch ? parseInt(repsMatch[0], 10) : 0;
+          volumeTotal += weight * reps;
+        });
+      });
+
+      window.salvarHistorico(dayId, duracao, Math.round(volumeTotal));
+
       sessionStartTime = null;
       localStorage.removeItem('session-start-time');
 
-      // Vibração de celebração
       window.vibrar([100, 50, 100, 50, 300]);
-
-      // Beeps de conclusão
       window.tocarBeep(523, 150, 0.12);
       setTimeout(() => window.tocarBeep(659, 150, 0.12), 180);
       setTimeout(() => window.tocarBeep(784, 250, 0.15), 360);
 
-      // Toast de parabéns
-      window.showToast(`🏆 Treino concluído em ${duracao}!`, 'success', 4000);
+      window.showToast(`🏆 Treino concluído em ${duracao}! Volume: ${Math.round(volumeTotal)}kg`, 'success', 5000);
+      // Use 🔄 para zerar manualmente
+    };
 
-      // Zera checkboxes após 3 segundos
-      setTimeout(async () => {
-        const exercises = loadedWorkouts[dayId];
-        if (!exercises) return;
-        exercises.forEach((ex, exIndex) => {
-          (ex.reps || []).forEach((_, serieIndex) => {
-            localStorage.removeItem(`checkbox-${dayId}-${exIndex}-${serieIndex}`);
-            const checkbox = document.querySelector(
-              `#tab-content-${CSS.escape(dayId)} .exercicio:nth-child(${exIndex + 1}) .serie-item:nth-child(${serieIndex + 1}) input[type="checkbox"]`
-            );
-            if (checkbox) checkbox.checked = false;
-            const serieItem = checkbox ? checkbox.closest('.serie-item') : null;
-            if (serieItem) serieItem.classList.remove('done');
-            window.stopTimer(`timer-${dayId}-${exIndex}-${serieIndex}`);
-          });
-          const exercicioEl = document.querySelector(
-            `#tab-content-${CSS.escape(dayId)} .exercicio:nth-child(${exIndex + 1})`
-          );
-          if (exercicioEl) exercicioEl.classList.remove('all-done');
-        });
+    window.abrirHistorico = function () {
+      const modal = document.getElementById('historicoModal');
+      const lista = document.getElementById('historico-lista');
+      if (!modal || !lista) return;
+      const historico = JSON.parse(localStorage.getItem('historico') || '[]');
+      if (historico.length === 0) {
+        lista.innerHTML = '<div class="history-empty">Nenhum treino registrado ainda.<br>Complete um treino para ver o histórico!</div>';
+      } else {
+        lista.innerHTML = historico.map(h => `
+          <div class="history-item">
+            <div class="history-item-day">${h.dia.replace('-FEIRA', '')}</div>
+            <div class="history-item-meta">${h.data} · ${h.duracao} · ${h.volume}kg volume</div>
+          </div>
+        `).join('');
+      }
+      modal.classList.add('show');
+      modal.setAttribute('aria-hidden', 'false');
+    };
 
-        const timerEl = document.getElementById('workout-session-timer');
-        if (timerEl) timerEl.textContent = '00:00:00';
-
-        window.atualizarContador();
-        window.showToast('✅ Pronto para o próximo treino!', 'info', 2500);
-      }, 3000);
+    window.fecharHistorico = function () {
+      const modal = document.getElementById('historicoModal');
+      if (modal) { modal.classList.remove('show'); modal.setAttribute('aria-hidden', 'true'); }
     };
 
     window.handleTabClick = function (dayId) {
@@ -1092,19 +1182,6 @@
             `;
           }).join('');
 
-          const timersHtml = (exercicio.reps || []).map((_, serieIndex) => `
-            <div id="timer-${day}-${exIndex}-${serieIndex}" class="exercicio-timer">
-              <div class="timer-ring-wrap">
-                <svg class="timer-svg" viewBox="0 0 80 80">
-                  <circle class="timer-circle-bg" cx="40" cy="40" r="35"></circle>
-                  <circle class="timer-circle-progress" cx="40" cy="40" r="35"
-                    stroke-dasharray="${circumference}" stroke-dashoffset="${circumference}"></circle>
-                </svg>
-                <span class="timer-text"></span>
-              </div>
-            </div>
-          `).join('');
-
           exercicioDiv.innerHTML = `
             <div class="ex-nome">
               <span class="ex-nome-text">${exercicio.nome || 'Exercício'}</span>
@@ -1113,7 +1190,6 @@
             ${observacaoHtml}
             <div class="progresso-exercicio"></div>
             <div class="serie">${seriesHtml}</div>
-            ${timersHtml}
           `;
           tabContent.appendChild(exercicioDiv);
         });
@@ -1274,6 +1350,13 @@
       }
 
       bindResetButtonIOSSafe();
+
+      const historicoBtn = document.getElementById('historico-button');
+      if (historicoBtn) historicoBtn.addEventListener('click', window.abrirHistorico);
+      const closeHistoricoBtn = document.getElementById('closeHistoricoModal');
+      if (closeHistoricoBtn) closeHistoricoBtn.addEventListener('click', window.fecharHistorico);
+      const historicoModal = document.getElementById('historicoModal');
+      if (historicoModal) historicoModal.addEventListener('click', (e) => { if (e.target === historicoModal) window.fecharHistorico(); });
 
       // Restaurar config do timer
       const savedTimer = localStorage.getItem('timer-duration');
