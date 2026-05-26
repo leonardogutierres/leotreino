@@ -163,7 +163,7 @@
     <header class="header">
         <h1>Remédios</h1>
         <div class="header-actions">
-           <a href="/treino" class="nav-link-button" title="Voltar aos treinos">🏋️</a>
+            <a href="./index.html" class="nav-link-button" title="Voltar aos treinos">🏋️</a>
             <button class="theme-toggle-button" onclick="toggleThemeMode()">
                 <span id="theme-icon">☀️</span>
             </button>
@@ -171,37 +171,46 @@
     </header>
 
     <section class="section">
-        <div class="section-title">☀️ Manhã — com café da manhã</div>
-        <div class="med-item"><input type="checkbox" class="med-checkbox" data-key="manha-litio"><div class="med-label">Lítio 300 mg<div class="subtext">2 comprimidos</div></div></div>
-        <div class="med-item"><input type="checkbox" class="med-checkbox" data-key="manha-aas"><div class="med-label">AAS 100 mg<div class="subtext">1 comprimido</div></div></div>
-        <div class="med-item"><input type="checkbox" class="med-checkbox" data-key="manha-tadalafila"><div class="med-label">Tadalafila 5 mg<div class="subtext">1 comprimido</div></div></div>
-        <div class="med-item"><input type="checkbox" class="med-checkbox" data-key="manha-multi"><div class="med-label">Multivitamínico<div class="subtext">1 comprimido</div></div></div>
-        <div class="med-item"><input type="checkbox" class="med-checkbox" data-key="manha-meco"><div class="med-label">Mecobalamina 1000 mcg<div class="subtext">1 comprimido</div></div></div>
-        <div class="med-item"><input type="checkbox" class="med-checkbox" data-key="manha-vitd-k2"><div class="med-label">Vitamina D3 6000 UI + K2 MK7 150 mcg<div class="subtext">1 cápsula</div></div></div>
+        <div class="section-title">💉 Injetáveis — todos os dias</div>
+        <div class="med-item"><input type="checkbox" class="med-checkbox" data-key="inj-testo"><div class="med-label">Testosterona Enantato 300 mg/ml<div class="subtext">0,17 ml (17 UI) — 50 mg/dia</div></div></div>
+        <div class="med-item"><input type="checkbox" class="med-checkbox" data-key="inj-master"><div class="med-label">Masteron 100 mg/ml<div class="subtext">0,40 ml (40 UI) = 40 mg/dia</div></div></div>
+        <div class="small-info" style="margin-top:12px;">
+            <strong>Testosterona Enantato 300 mg/ml (0,17 ml/dia = 50 mg):</strong><br>
+            &nbsp;&nbsp;Semanal: 0,17 × 7 = 1,2 ml<br>
+            &nbsp;&nbsp;Mensal: 0,17 × 30 = 5,0 ml<br>
+            &nbsp;&nbsp;Ciclo 3 meses: 15,0 ml → 2 frascos de 10 ml<br><br>
+            <strong>Masteron (0,40 ml/dia):</strong><br>
+            &nbsp;&nbsp;Semanal: 0,40 × 7 = 2,8 ml<br>
+            &nbsp;&nbsp;Mensal: 0,40 × 30 = 12,0 ml<br>
+            &nbsp;&nbsp;Ciclo 3 meses: 36,0 ml → 4 frascos de 10 ml
+        </div>
     </section>
 
     <section class="section">
-        <div class="section-title">⏱️ 30–60 min antes do almoço ou jantar</div>
-        <div class="med-item"><input type="checkbox" class="med-checkbox" data-key="antes-natto"><div class="med-label">Nattokinase 150 mg<div class="subtext">1 cápsula — com água, longe da comida</div></div></div>
+        <div class="section-title">⏱️ Jejum — antes de tudo</div>
+        <div class="med-item"><input type="checkbox" class="med-checkbox" data-key="jejum-natto"><div class="med-label">Nattokinase 150 mg<div class="subtext">1 cápsula — enquanto usar hormônios</div></div></div>
     </section>
 
     <section class="section">
-        <div class="section-title">🍽️ Almoço — com comida</div>
-        <div class="med-item"><input type="checkbox" class="med-checkbox" data-key="almoco-omega3"><div class="med-label">Ômega 3 1 g<div class="subtext">2 cápsulas</div></div></div>
-        <div class="med-item"><input type="checkbox" class="med-checkbox" data-key="almoco-nac"><div class="med-label">NAC 600 mg<div class="subtext">1 cápsula</div></div></div>
-        <div class="med-item"><input type="checkbox" class="med-checkbox" data-key="almoco-eletrolito1"><div class="med-label">Eletrólito<div class="subtext">sódio 380 mg · potássio 63 mg · magnésio 63 mg</div></div></div>
+        <div class="section-title">☀️ Manhã — após primeira refeição</div>
+        <div class="med-item"><input type="checkbox" class="med-checkbox" data-key="manha-vitd-k2"><div class="med-label">Vitamina D3 2000 UI + K2 MK7 100 mcg<div class="subtext">1 cápsula</div></div></div>
+        <div class="med-item"><input type="checkbox" class="med-checkbox" data-key="manha-omega3"><div class="med-label">Ômega 3 2000 mg<div class="subtext">pós primeira refeição</div></div></div>
+        <div class="med-item"><input type="checkbox" class="med-checkbox" data-key="manha-tadalafila"><div class="med-label">Tadalafila 5 mg<div class="subtext">1 comprimido — todos os dias, qualquer horário (prefiro manhã) · enquanto usar hormônios</div></div></div>
     </section>
 
     <section class="section">
-        <div class="section-title">🌆 Jantar — com comida</div>
-        <div class="med-item"><input type="checkbox" class="med-checkbox" data-key="jantar-omega3"><div class="med-label">Ômega 3 1 g<div class="subtext">1 cápsula</div></div></div>
-        <div class="med-item"><input type="checkbox" class="med-checkbox" data-key="jantar-nac"><div class="med-label">NAC 600 mg<div class="subtext">1 cápsula</div></div></div>
-        <div class="med-item"><input type="checkbox" class="med-checkbox" data-key="jantar-eletrolito2"><div class="med-label">Eletrólito<div class="subtext">magnésio 79 mg · potássio 105 mg · cálcio 60 mg</div></div></div>
+        <div class="section-title">🍽️ Pós almoço</div>
+        <div class="med-item"><input type="checkbox" class="med-checkbox" data-key="pos-almoco-telmisartana"><div class="med-label">Telmisartana 40 mg<div class="subtext">1 comprimido — enquanto usar hormônios</div></div></div>
     </section>
 
     <section class="section">
-        <div class="section-title">🌙 Noite — antes de dormir</div>
-        <div class="med-item"><input type="checkbox" class="med-checkbox" data-key="noite-litio"><div class="med-label">Lítio 300 mg<div class="subtext">3 comprimidos</div></div></div>
+        <div class="section-title">⏰ Qualquer horário</div>
+        <div class="med-item"><input type="checkbox" class="med-checkbox" data-key="qualquer-creatina"><div class="med-label">Creatina 5 g<div class="subtext">todos os dias</div></div></div>
+    </section>
+
+    <section class="section">
+        <div class="section-title">🌙 Noite — 1h antes de deitar</div>
+        <div class="med-item"><input type="checkbox" class="med-checkbox" data-key="noite-glicina"><div class="med-label">Glicina 5 g<div class="subtext">ciclo de 90 dias</div></div></div>
     </section>
 
     <div class="actions-row">
