@@ -7,6 +7,14 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Serve built React app + static pages
+const path = require('path');
+app.use(express.static(path.join(__dirname, 'dist')));
+// SPA fallback: serve index.html for unmatched routes (except /api)
+app.get(/^(?!\/api).*/, (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+});
+
 const pool = new Pool({
   host: process.env.DB_HOST,
   port: parseInt(process.env.DB_PORT),

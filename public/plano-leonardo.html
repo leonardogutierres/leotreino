@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Plano do Dia - Leonardo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <style>
+        :root {
+            --bg-color: #121212;
+            --container-bg: #1e1e1e;
+            --text-color: #e0e0e0;
+            --primary-color: #64b5f6;
+            --secondary-color: #81c784;
+            --accent-color: #1e3a5f;
+            --refeicao-bg: #1e283c;
+            --item-bg: #1a2332;
+            --obs-color: #da7406;
+            --btn-bg: #1565c0;
+            --btn-text: #fff;
+        }
+        .light-mode {
+            --bg-color: #f2f2f2;
+            --container-bg: #fff;
+            --text-color: #222;
+            --primary-color: #0b3470;
+            --secondary-color: #197b30;
+            --accent-color: #deebff;
+            --refeicao-bg: #ebf5fb;
+            --item-bg: #e9f2fe;
+            --obs-color: #d97706;
+            --btn-bg: #0275d8;
+            --btn-text: #fff;
+        }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            margin: 0; padding: 0;
+            transition: background 0.3s, color 0.3s;
+            -webkit-font-smoothing: antialiased;
+        }
+        .container {
+            max-width: 580px; margin: 0 auto; padding: 16px;
+            background: var(--container-bg); min-height: 100vh;
+            transition: background 0.3s;
+        }
+        .header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 16px; margin-top: 8px;
+        }
+        h1 {
+            color: var(--primary-color); text-align: center;
+            font-weight: 800; margin: 0; letter-spacing: 1px;
+            flex: 1; font-size: 1.25rem;
+        }
+        .header-actions { display: flex; gap: 8px; }
+        .nav-link-button, .theme-toggle-button {
+            background: var(--accent-color); color: var(--primary-color);
+            border: none; border-radius: 50%;
+            width: 36px; height: 36px; font-size: 1.1em;
+            cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            display: flex; align-items: center; justify-content: center;
+            text-decoration: none; transition: transform 0.2s;
+        }
+        .nav-link-button:active, .theme-toggle-button:active { transform: scale(0.95); }
+
+        .refeicao {
+            background: var(--refeicao-bg); border-radius: 8px;
+            padding: 14px; margin-bottom: 14px;
+            transition: background 0.3s;
+        }
+        .refeicao-titulo {
+            font-weight: bold; font-size: 1.05em;
+            color: var(--secondary-color); margin-bottom: 10px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .refeicao-horario { color: var(--primary-color); font-size: 0.85em; }
+        .item {
+            background: var(--item-bg); border-radius: 5px;
+            padding: 7px 11px; margin-bottom: 6px;
+            transition: background 0.3s; line-height: 1.45;
+            font-size: 0.93rem;
+        }
+        .item:last-child { margin-bottom: 0; }
+        .destaque { color: var(--obs-color); font-weight: bold; }
+
+        .observacoes {
+            background: var(--refeicao-bg); border-radius: 8px;
+            padding: 16px; margin-top: 24px;
+        }
+        .observacoes h2 {
+            color: var(--obs-color); font-size: 1.15em;
+            margin-top: 0; margin-bottom: 12px;
+        }
+        .obs-group-title {
+            color: var(--secondary-color); font-weight: 700;
+            margin-top: 14px; margin-bottom: 8px; letter-spacing: 0.2px;
+            font-size: 0.93rem;
+        }
+        .obs-item {
+            margin-bottom: 8px; line-height: 1.55;
+            padding-left: 20px; position: relative; font-size: 0.9rem;
+        }
+        .obs-item:before {
+            content: "▪"; position: absolute; left: 0;
+            color: var(--primary-color); font-weight: bold;
+        }
+        .checklist-rapido {
+            margin: 10px 0 14px; padding: 12px;
+            border-radius: 8px;
+            background: rgba(100,181,246,0.1);
+            border: 1px solid rgba(100,181,246,0.35);
+        }
+        .checklist-rapido-title {
+            color: var(--primary-color); font-weight: 700; margin-bottom: 8px;
+        }
+        .check-item { font-size: 0.9rem; line-height: 1.5; margin-bottom: 5px; }
+        .check-item:last-child { margin-bottom: 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-actions">
+                <a href="dieta.html" class="nav-link-button" title="Voltar">🍽️</a>
+                <a href="index.html" class="nav-link-button" title="Treinos">🏋️</a>
+            </div>
+            <h1>Plano do Dia</h1>
+            <div class="header-actions">
+                <button class="theme-toggle-button" onclick="toggleThemeMode()">
+                    <span id="theme-icon">☀️</span>
+                </button>
+            </div>
+        </header>
+
+        <div class="bloco-info" style="background:rgba(100,181,246,0.12);border:1px solid rgba(100,181,246,0.35);border-radius:8px;padding:10px 12px;margin-bottom:16px;font-size:0.9rem;line-height:1.5;">
+            <strong>Plano Alimentar — Leonardo Gutierres Silva</strong><br>
+            Horários ilustrativos. Ajuste conforme sua rotina.<br>
+            <span class="destaque">Sem balança não existe dieta.</span>
+            Refeição livre semanal de até <span class="destaque">1000 kcal</span> (substitui jantar + ceia).
+        </div>
+
+        <!-- CAFÉ DA MANHÃ -->
+        <div class="refeicao">
+            <div class="refeicao-titulo">🌅 CAFÉ DA MANHÃ <span class="refeicao-horario">- 07:30</span></div>
+            <div class="item"><span class="destaque">Carboidrato:</span> Pão francês sem miolo (1 un)</div>
+            <div class="item"><span class="destaque">Proteína:</span> Ovo de galinha (2 un)</div>
+            <div class="item"><span class="destaque">Laticínio:</span> Requeijão (30g)</div>
+        </div>
+
+        <!-- COLAÇÃO -->
+        <div class="refeicao">
+            <div class="refeicao-titulo">🍌 COLAÇÃO <span class="refeicao-horario">- 10:00</span></div>
+            <div class="item">Banana (1 un)</div>
+            <div class="item">Maçã vermelha (1 un) OU mamão (180g) OU melão</div>
+        </div>
+
+        <!-- ALMOÇO -->
+        <div class="refeicao">
+            <div class="refeicao-titulo">🍽️ ALMOÇO <span class="refeicao-horario">- 12:00</span></div>
+            <div class="item"><span class="destaque">Base:</span> Arroz com feijão (340g) OU arroz branco cozido (320g)</div>
+            <div class="item"><span class="destaque">Proteína:</span> Filé de frango (120g) OU carne bovina magra (110g)</div>
+            <div class="item"><span class="destaque">Gordura:</span> Azeite extra virgem (5g)</div>
+            <div class="item"><span class="destaque">Obs:</span> Tem que ter verduras e vegetais. Arroz e feijão podem ser divididos conforme paladar (meio a meio).</div>
+        </div>
+
+        <!-- LANCHE DA TARDE -->
+        <div class="refeicao">
+            <div class="refeicao-titulo">☕ LANCHE DA TARDE <span class="refeicao-horario">- 16:30</span></div>
+            <div class="item">Whey (1 porção)</div>
+            <div class="item">Sucrilhos Kellogg's (50g) OU farinha láctea Nestlé (45g)</div>
+            <div class="item">Banana (1 un)</div>
+            <div class="item">Leite desnatado (200g)</div>
+        </div>
+
+        <!-- JANTAR -->
+        <div class="refeicao">
+            <div class="refeicao-titulo">🌙 JANTAR <span class="refeicao-horario">- 21:30</span></div>
+            <div class="item"><span class="destaque">Base:</span> Arroz branco cozido (320g) OU arroz com feijão (340g)</div>
+            <div class="item"><span class="destaque">Proteína:</span> Filé de frango (120g) OU carne bovina magra (110g) OU peixe magro assado/cozido (130g)</div>
+            <div class="item"><span class="destaque">Gordura:</span> Azeite extra virgem (5g) OU castanha do Pará sem sal (6g)</div>
+            <div class="item"><span class="destaque">Obs:</span> Tem que ter verduras e vegetais. Arroz e feijão podem ser divididos conforme paladar.</div>
+        </div>
+
+        <!-- CEIA -->
+        <div class="refeicao">
+            <div class="refeicao-titulo">🛌 CEIA <span class="refeicao-horario">- 22:00</span></div>
+            <div class="item">Iogurte desnatado (170g)</div>
+            <div class="item">Banana (1 un)</div>
+            <div class="item">Whey (1 porção)</div>
+        </div>
+
+        <!-- OBSERVAÇÕES -->
+        <div style="text-align:center;margin-top:20px;">
+            <a href="observacoes.html" style="
+                display:inline-block;padding:12px 24px;border-radius:8px;
+                background:var(--refeicao-bg);color:var(--secondary-color);
+                font-weight:700;text-decoration:none;font-size:0.95rem;
+                border:1px solid var(--glass-border);">📋 Ver Observações Importantes</a>
+        </div>
+    </div>
+
+    <script>
+        function applySavedTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const icon = document.getElementById('theme-icon');
+            if (savedTheme === 'light') {
+                document.body.classList.add('light-mode');
+                if (icon) icon.textContent = '🌙';
+            } else {
+                document.body.classList.add('dark-mode');
+                if (icon) icon.textContent = '☀️';
+            }
+        }
+        function toggleThemeMode() {
+            const body = document.body;
+            const icon = document.getElementById('theme-icon');
+            if (body.classList.contains('dark-mode')) {
+                body.classList.remove('dark-mode');
+                body.classList.add('light-mode');
+                localStorage.setItem('theme','light');
+                if (icon) icon.textContent = '🌙';
+            } else {
+                body.classList.remove('light-mode');
+                body.classList.add('dark-mode');
+                localStorage.setItem('theme','dark');
+                if (icon) icon.textContent = '☀️';
+            }
+        }
+        document.addEventListener('DOMContentLoaded', applySavedTheme);
+    </script>
+</body>
+</html>

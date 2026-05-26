@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Observações</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <style>
+        :root {
+            --bg-color: #121212;
+            --container-bg: #1e1e1e;
+            --text-color: #e0e0e0;
+            --primary-color: #64b5f6;
+            --secondary-color: #81c784;
+            --accent-color: #1e3a5f;
+            --refeicao-bg: #1e283c;
+            --obs-color: #da7406;
+        }
+        .light-mode {
+            --bg-color: #f2f2f2;
+            --container-bg: #fff;
+            --text-color: #222;
+            --primary-color: #0b3470;
+            --secondary-color: #197b30;
+            --accent-color: #deebff;
+            --refeicao-bg: #ebf5fb;
+            --obs-color: #d97706;
+        }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            margin: 0; padding: 0;
+            transition: background 0.3s, color 0.3s;
+            -webkit-font-smoothing: antialiased;
+        }
+        .container {
+            max-width: 580px; margin: 0 auto; padding: 16px;
+            background: var(--container-bg); min-height: 100vh;
+        }
+        .header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 20px; margin-top: 8px;
+        }
+        h1 {
+            color: var(--primary-color); text-align: center;
+            font-weight: 800; margin: 0; letter-spacing: 1px;
+            flex: 1; font-size: 1.3rem;
+        }
+        .header-actions { display: flex; gap: 8px; }
+        .nav-link-button, .theme-toggle-button {
+            background: var(--accent-color); color: var(--primary-color);
+            border: none; border-radius: 50%;
+            width: 36px; height: 36px; font-size: 1.1em;
+            cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            display: flex; align-items: center; justify-content: center;
+            text-decoration: none; transition: transform 0.2s;
+        }
+        .nav-link-button:active, .theme-toggle-button:active { transform: scale(0.95); }
+
+        .observacoes {
+            background: var(--refeicao-bg); border-radius: 8px;
+            padding: 16px;
+        }
+        .observacoes h2 {
+            color: var(--obs-color); font-size: 1.15em;
+            margin-top: 0; margin-bottom: 12px;
+        }
+        .obs-group-title {
+            color: var(--secondary-color); font-weight: 700;
+            margin-top: 14px; margin-bottom: 8px;
+            letter-spacing: 0.2px; font-size: 0.93rem;
+        }
+        .obs-item {
+            margin-bottom: 8px; line-height: 1.55;
+            padding-left: 20px; position: relative;
+            font-size: 0.9rem;
+        }
+        .obs-item:before {
+            content: "▪"; position: absolute; left: 0;
+            color: var(--primary-color); font-weight: bold;
+        }
+        .destaque { color: var(--obs-color); font-weight: bold; }
+        .checklist-rapido {
+            margin: 10px 0 14px; padding: 12px;
+            border-radius: 8px;
+            background: rgba(100,181,246,0.1);
+            border: 1px solid rgba(100,181,246,0.35);
+        }
+        .checklist-rapido-title {
+            color: var(--primary-color); font-weight: 700; margin-bottom: 8px;
+        }
+        .check-item {
+            font-size: 0.9rem; line-height: 1.5; margin-bottom: 5px;
+        }
+        .check-item:last-child { margin-bottom: 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-actions">
+                <a href="plano-leonardo.html" class="nav-link-button" title="Plano do Dia">📄</a>
+                <a href="dieta.html" class="nav-link-button" title="Dieta">🍽️</a>
+            </div>
+            <h1>Observações</h1>
+            <div class="header-actions">
+                <button class="theme-toggle-button" onclick="toggleThemeMode()">
+                    <span id="theme-icon">☀️</span>
+                </button>
+            </div>
+        </header>
+
+        <div class="observacoes">
+            <h2>📋 OBSERVAÇÕES IMPORTANTES</h2>
+            <div class="checklist-rapido">
+                <div class="checklist-rapido-title">Checklist rápido do dia</div>
+                <div class="check-item">☑️ Bebi água ao acordar (meta ideal: 600 ml)</div>
+                <div class="check-item">☑️ Pesei alimentos prontos na balança</div>
+                <div class="check-item">☑️ Pré-treino feito 45-120 min antes (quando treinar)</div>
+                <div class="check-item">☑️ Água total do dia dentro da meta (30-50 ml/kg)</div>
+                <div class="check-item">☑️ Usei pouco óleo/azeite no preparo</div>
+            </div>
+            <div class="obs-group-title">Base do plano</div>
+            <div class="obs-item"><span class="destaque">Sempre usar balança</span> para pesar os alimentos.</div>
+            <div class="obs-item">Pesar os alimentos <span class="destaque">depois de prontos</span>.</div>
+            <div class="obs-item">Pode dividir as porções da mesma linha (ex.: metade frango e metade carne), respeitando a gramagem total.</div>
+            <div class="obs-item">Não fazer alterações por conta própria, inclusive nos finais de semana.</div>
+
+            <div class="obs-group-title">Organização das refeições</div>
+            <div class="obs-item">A ordem das refeições pode ser alterada conforme sua rotina.</div>
+            <div class="obs-item">É permitido transferir alimentos entre refeições.</div>
+            <div class="obs-item">Se não estiver especificado no plano, qualquer refeição pode ser usada como pré ou pós-treino.</div>
+            <div class="obs-item">Pré-treino: fazer entre <span class="destaque">45 e 120 minutos</span> antes do treino.</div>
+
+            <div class="obs-group-title">Hidratação e rotina diária</div>
+            <div class="obs-item">Hidratação ao acordar é obrigatória: beber água ao levantar (ideal: <span class="destaque">600 ml</span>).</div>
+            <div class="obs-item">Hidratação diária: <span class="destaque">30 a 50 ml de água por kg</span> de peso corporal.</div>
+
+            <div class="obs-group-title">Permitidos</div>
+            <div class="obs-item">Chás naturais, gelatina zero e sucos zero (Clight) liberados.</div>
+            <div class="obs-item">Refrigerante zero liberado com moderação.</div>
+            <div class="obs-item">Adoçantes permitidos: Stevia, Sucralose, Xilitol e Sacarina.</div>
+            <div class="obs-item">Café preto sem açúcar liberado com moderação, preferencialmente até as 15h.</div>
+
+            <div class="obs-group-title">Preparo dos alimentos</div>
+            <div class="obs-item">Usar sal de cozinha com moderação. Evitar temperos prontos e industrializados.</div>
+            <div class="obs-item">Preparar com mínimo de azeite extra virgem ou óleo vegetal (a gordura da dieta já está ajustada).</div>
+            <div class="obs-item">Canela em pó é recomendada sempre que possível.</div>
+            <div class="obs-item">Vinagre de maçã é recomendado nas refeições e preparos.</div>
+            <div class="obs-item">Ovos preferencialmente mexidos, com mínima quantidade de azeite ou óleo de coco apenas para untar.</div>
+
+            <div class="obs-group-title">Vegetais e frequência alimentar</div>
+            <div class="obs-item">Vegetais liberados: abobrinha, acelga, pepino, vagem, berinjela, tomate, couve, couve-flor, alface, jiló, chuchu, rúcula, agrião, quiabo, pimentão, cebola, alho, rabanete e repolho.</div>
+            <div class="obs-item">Recomenda-se consumo de carne vermelha pelo menos 3 vezes por semana.</div>
+
+            <div style="margin-top: 20px; padding: 12px; background: rgba(218,116,6,0.1); border-radius: 6px; border-left: 4px solid var(--obs-color);">
+                <strong style="color: var(--obs-color);">⚠️ ATENÇÃO:</strong><br>
+                Para que consigamos alcançar seus objetivos é de fundamental importância que você siga exatamente o que foi prescrito.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function applySavedTheme(){
+            const t=localStorage.getItem('theme'),i=document.getElementById('theme-icon');
+            if(t==='light'){document.body.classList.add('light-mode');if(i)i.textContent='🌙'}
+            else{document.body.classList.add('dark-mode');if(i)i.textContent='☀️'}
+        }
+        function toggleThemeMode(){
+            const b=document.body,i=document.getElementById('theme-icon');
+            if(b.classList.contains('dark-mode')){b.classList.remove('dark-mode');b.classList.add('light-mode');localStorage.setItem('theme','light');if(i)i.textContent='🌙'}
+            else{b.classList.remove('light-mode');b.classList.add('dark-mode');localStorage.setItem('theme','dark');if(i)i.textContent='☀️'}
+        }
+        document.addEventListener('DOMContentLoaded',applySavedTheme);
+    </script>
+</body>
+</html>

@@ -3,10 +3,10 @@ FROM node:20-alpine
 WORKDIR /app
 
 COPY package.json package-lock.json ./
-RUN npm ci --production
+RUN npm ci
 
-COPY server.js .
-COPY .env .
+COPY . .
+RUN npm run build
 
 EXPOSE 3000
 

@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Remédios</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <style>
+        :root {
+            --bg-color: #121212;
+            --container-bg: #1e1e1e;
+            --text-color: #e0e0e0;
+            --primary-color: #64b5f6;
+            --secondary-color: #81c784;
+            --accent-color: #1e3a5f;
+            --active-color: #0d47a1;
+            --input-bg: #2d2d2d;
+            --border-color: #4a6b8a;
+            --btn-bg: #1565c0;
+            --btn-text: #fff;
+        }
+        .light-mode {
+            --bg-color: #f5f5f5;
+            --container-bg: #ffffff;
+            --text-color: #222222;
+            --primary-color: #0b3470;
+            --secondary-color: #197b30;
+            --accent-color: #deebff;
+            --active-color: #1976d2;
+            --input-bg: #ffffff;
+            --border-color: #a3cafe;
+            --btn-bg: #0275d8;
+            --btn-text: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 16px;
+            padding-bottom: 32px;
+            background: var(--container-bg);
+            min-height: 100vh;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            margin-top: 8px;
+        }
+        h1 {
+            margin: 0;
+            color: var(--primary-color);
+            font-size: 1.6rem;
+            font-weight: 800;
+        }
+        .header-actions {
+            display: flex;
+            gap: 8px;
+        }
+        .theme-toggle-button,
+        .nav-link-button {
+            background: var(--accent-color);
+            color: var(--primary-color);
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.1em;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.3s, transform 0.2s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        .theme-toggle-button:active,
+        .nav-link-button:active {
+            transform: scale(0.95);
+        }
+
+        .section {
+            margin-top: 16px;
+            padding: 14px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            background: rgba(0,0,0,0.1);
+        }
+        .section-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            color: var(--primary-color);
+        }
+
+        .med-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 0;
+            gap: 10px;
+        }
+        .med-item + .med-item {
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+        .med-checkbox {
+            width: 18px;
+            height: 18px;
+        }
+        .med-label {
+            flex: 1;
+            font-size: 0.95rem;
+        }
+        .subtext {
+            font-size: 0.8rem;
+            opacity: 0.7;
+            margin-top: 2px;
+        }
+
+        .actions-row {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        .btn {
+            flex: 1;
+            border-radius: 10px;
+            padding: 10px 12px;
+            border: none;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            background: var(--btn-bg);
+            color: var(--btn-text);
+        }
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary-color);
+            border: 1px solid var(--border-color);
+        }
+
+        .small-info {
+            font-size: 0.75rem;
+            opacity: 0.7;
+            margin-top: 8px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header class="header">
+        <h1>Remédios</h1>
+        <div class="header-actions">
+            <a href="./index.html" class="nav-link-button" title="Voltar aos treinos">🏋️</a>
+            <button class="theme-toggle-button" onclick="toggleThemeMode()">
+                <span id="theme-icon">☀️</span>
+            </button>
+        </div>
+    </header>
+
+    <section class="section">
+        <div class="section-title">💉 Injetáveis — todos os dias</div>
+        <div class="med-item"><input type="checkbox" class="med-checkbox" data-key="inj-testo"><div class="med-label">Testosterona Enantato 300 mg/ml<div class="subtext">0,17 ml (17 UI) — 50 mg/dia</div></div></div>
+        <div class="med-item"><input type="checkbox" class="med-checkbox" data-key="inj-master"><div class="med-label">Masteron 100 mg/ml<div class="subtext">0,40 ml (40 UI) = 40 mg/dia</div></div></div>
+        <div class="small-info" style="margin-top:12px;">
+            <strong>Testosterona Enantato 300 mg/ml (0,17 ml/dia = 50 mg):</strong><br>
+            &nbsp;&nbsp;Semanal: 0,17 × 7 = 1,2 ml<br>
+            &nbsp;&nbsp;Mensal: 0,17 × 30 = 5,0 ml<br>
+            &nbsp;&nbsp;Ciclo 3 meses: 15,0 ml → 2 frascos de 10 ml<br><br>
+            <strong>Masteron (0,40 ml/dia):</strong><br>
+            &nbsp;&nbsp;Semanal: 0,40 × 7 = 2,8 ml<br>
+            &nbsp;&nbsp;Mensal: 0,40 × 30 = 12,0 ml<br>
+            &nbsp;&nbsp;Ciclo 3 meses: 36,0 ml → 4 frascos de 10 ml
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="section-title">⏱️ Jejum — antes de tudo</div>
+        <div class="med-item"><input type="checkbox" class="med-checkbox" data-key="jejum-natto"><div class="med-label">Nattokinase 150 mg<div class="subtext">1 cápsula — enquanto usar hormônios</div></div></div>
+    </section>
+
+    <section class="section">
+        <div class="section-title">☀️ Manhã — após primeira refeição</div>
+        <div class="med-item"><input type="checkbox" class="med-checkbox" data-key="manha-vitd-k2"><div class="med-label">Vitamina D3 2000 UI + K2 MK7 100 mcg<div class="subtext">1 cápsula</div></div></div>
+        <div class="med-item"><input type="checkbox" class="med-checkbox" data-key="manha-omega3"><div class="med-label">Ômega 3 2000 mg<div class="subtext">pós primeira refeição</div></div></div>
+        <div class="med-item"><input type="checkbox" class="med-checkbox" data-key="manha-tadalafila"><div class="med-label">Tadalafila 5 mg<div class="subtext">1 comprimido — todos os dias, qualquer horário (prefiro manhã) · enquanto usar hormônios</div></div></div>
+    </section>
+
+    <section class="section">
+        <div class="section-title">🍽️ Pós almoço</div>
+        <div class="med-item"><input type="checkbox" class="med-checkbox" data-key="pos-almoco-telmisartana"><div class="med-label">Telmisartana 40 mg<div class="subtext">1 comprimido — enquanto usar hormônios</div></div></div>
+    </section>
+
+    <section class="section">
+        <div class="section-title">⏰ Qualquer horário</div>
+        <div class="med-item"><input type="checkbox" class="med-checkbox" data-key="qualquer-creatina"><div class="med-label">Creatina 5 g<div class="subtext">todos os dias</div></div></div>
+    </section>
+
+    <section class="section">
+        <div class="section-title">🌙 Noite — 1h antes de deitar</div>
+        <div class="med-item"><input type="checkbox" class="med-checkbox" data-key="noite-glicina"><div class="med-label">Glicina 5 g<div class="subtext">ciclo de 90 dias</div></div></div>
+    </section>
+
+    <div class="actions-row">
+        <button class="btn" id="btn-marcar-tudo-hoje">Marcar tudo de hoje</button>
+        <button class="btn btn-secondary" id="btn-limpar-tudo">Limpar tudo</button>
+    </div>
+
+    <div class="small-info">
+        As marcações ficam salvas no navegador (localStorage).
+    </div>
+</div>
+
+<script>
+function applySavedTheme() {
+    const savedTheme = localStorage.getItem('theme');
+    const icon = document.getElementById('theme-icon');
+    if (savedTheme === 'light') {
+        document.body.classList.add('light-mode');
+        if (icon) icon.textContent = '🌙';
+    } else {
+        document.body.classList.add('dark-mode');
+        if (icon) icon.textContent = '☀️';
+    }
+}
+function toggleThemeMode() {
+    const body = document.body;
+    const icon = document.getElementById('theme-icon');
+    if (body.classList.contains('dark-mode')) {
+        body.classList.remove('dark-mode');
+        body.classList.add('light-mode');
+        localStorage.setItem('theme', 'light');
+        icon.textContent = '🌙';
+    } else {
+        body.classList.remove('light-mode');
+        body.classList.add('dark-mode');
+        localStorage.setItem('theme', 'dark');
+        icon.textContent = '☀️';
+    }
+}
+function loadCheckboxes() {
+    document.querySelectorAll('.med-checkbox').forEach(box => {
+        const key = 'med-' + box.dataset.key;
+        box.checked = localStorage.getItem(key) === 'true';
+        box.addEventListener('change', () => {
+            localStorage.setItem(key, box.checked);
+        });
+    });
+}
+function marcarTudoHoje() {
+    document.querySelectorAll('.med-checkbox').forEach(box => {
+        box.checked = true;
+        localStorage.setItem('med-' + box.dataset.key, true);
+    });
+}
+function limparTudo() {
+    document.querySelectorAll('.med-checkbox').forEach(box => {
+        box.checked = false;
+        localStorage.setItem('med-' + box.dataset.key, false);
+    });
+}
+document.addEventListener('DOMContentLoaded', () => {
+    applySavedTheme();
+    loadCheckboxes();
+    document.getElementById('btn-marcar-tudo-hoje').onclick = marcarTudoHoje;
+    document.getElementById('btn-limpar-tudo').onclick = limparTudo;
+});
+</script>
+</body>
+</html>
