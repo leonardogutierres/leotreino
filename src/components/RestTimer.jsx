@@ -1,13 +1,22 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 
 export default function RestTimer({ seconds, onClose, onDone }) {
   const [running, setRunning] = useState(false)
   const [remaining, setRemaining] = useState(seconds)
   const [done, setDone] = useState(false)
-  const intervalRef = useRef(null)
+  const startRef = useRef(0)
+  const accumulatedRef = useRef(0)
   const audioCtx = useRef(null)
+  const onCloseRef = useRef(onClose)
+  onCloseRef.current = onClose
 
-  useEffect(() => setRemaining(seconds), [seconds])
+  useEffect(() => {
+    setRemaining(seconds)
+    setDone(false)
+    setRunning(false)
+    accumulatedRef.current = 0
+    startRef.current = 0
+  }, [seconds])
 
   useEffect(() => {
     if (done) {
@@ -42,25 +51,46 @@ export default function RestTimer({ seconds, onClose, onDone }) {
           osc3.stop(audioCtx.current.currentTime + 0.3)
         }, 400)
       } catch {}
+
+      const t = setTimeout(() => onCloseRef.current?.(), 4000)
+      return () => clearTimeout(t)
     }
   }, [done])
 
-  useEffect(() => {
-    if (running && remaining > 0) {
-      intervalRef.current = setInterval(() => {
-        setRemaining(p => {
-          if (p <= 1) {
-            setRunning(false)
-            setDone(true)
-            onDone?.()
-            return 0
-          }
-          return p - 1
-        })
-      }, 1000)
+  const tick = useCallback(() => {
+    const elapsed = accumulatedRef.current + (Date.now() - startRef.current) / 1000
+    const left = Math.max(0, seconds - elapsed)
+    setRemaining(Math.ceil(left))
+
+    if (left <= 0) {
+      setRunning(false)
+      setDone(true)
+      onDone?.()
+      return true
     }
-    return () => clearInterval(intervalRef.current)
-  }, [running])
+    return false
+  }, [seconds, onDone])
+
+  useEffect(() => {
+    if (!running) return
+    let frame = requestAnimationFrame(loop)
+    function loop() {
+      const ended = tick()
+      if (!ended) frame = requestAnimationFrame(loop)
+    }
+    return () => cancelAnimationFrame(frame)
+  }, [running, tick])
+
+  useEffect(() => {
+    if (!running) return
+    startRef.current = Date.now()
+
+    function onFocus() {
+      tick()
+    }
+    document.addEventListener('visibilitychange', onFocus)
+    return () => document.removeEventListener('visibilitychange', onFocus)
+  }, [running, tick])
 
   const minutes = Math.floor(remaining / 60)
   const secs = remaining % 60
@@ -68,13 +98,21 @@ export default function RestTimer({ seconds, onClose, onDone }) {
 
   const handleStart = () => {
     setDone(false)
+    startRef.current = Date.now()
+    accumulatedRef.current = 0
     setRunning(true)
   }
 
-  const handlePause = () => setRunning(false)
+  const handlePause = () => {
+    const elapsed = (Date.now() - startRef.current) / 1000
+    accumulatedRef.current += elapsed
+    setRunning(false)
+  }
 
   const handleReset = () => {
     setRunning(false)
+    accumulatedRef.current = 0
+    startRef.current = 0
     setRemaining(seconds)
     setDone(false)
   }

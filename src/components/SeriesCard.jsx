@@ -1,7 +1,7 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { COLORS } from '../data'
 
-export default function SeriesCard({ seriesData, index, completed, onComplete }) {
+export default function SeriesCard({ seriesData, index, completed, savedPeso, savedReps, onComplete }) {
   const [reps, setReps] = useState('')
   const [peso, setPeso] = useState('')
   const color = COLORS[seriesData?.color] || {
@@ -11,6 +11,14 @@ export default function SeriesCard({ seriesData, index, completed, onComplete })
     label: 'SERIE',
     emoji: '⚪',
   }
+
+  useEffect(() => {
+    if (savedPeso) setPeso(String(savedPeso))
+  }, [savedPeso])
+
+  useEffect(() => {
+    if (savedReps) setReps(String(savedReps))
+  }, [savedReps])
 
   return (
     <div style={{
@@ -38,7 +46,7 @@ export default function SeriesCard({ seriesData, index, completed, onComplete })
           <div style={{ flex: 1 }}>
             <label style={{ fontSize: 9, color: '#64748b', fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1, display: 'block', marginBottom: 4 }}>Reps</label>
             <input
-              type="number" placeholder={seriesData?.reps || ''} value={reps}
+              type="number" placeholder={savedReps || seriesData?.reps || ''} value={reps}
               onChange={e => setReps(e.target.value)}
               style={inputStyle}
             />
@@ -46,12 +54,12 @@ export default function SeriesCard({ seriesData, index, completed, onComplete })
           <div style={{ flex: 1 }}>
             <label style={{ fontSize: 9, color: '#64748b', fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1, display: 'block', marginBottom: 4 }}>Peso</label>
             <input
-              type="number" placeholder="kg" value={peso}
+              type="number" placeholder={savedPeso || 'kg'} value={peso}
               onChange={e => setPeso(e.target.value)}
               style={inputStyle}
             />
           </div>
-          <button onClick={onComplete} style={{
+          <button onClick={() => onComplete(reps, peso)} style={{
             background: color.border, color: '#fff', border: 'none', borderRadius: 10,
             width: 42, height: 42, fontSize: 18, cursor: 'pointer',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -61,7 +69,9 @@ export default function SeriesCard({ seriesData, index, completed, onComplete })
       )}
 
       {completed && (
-        <div style={{ fontSize: 10, color: '#4ade80', fontWeight: 600 }}>✓ Concluída</div>
+        <div style={{ fontSize: 10, color: '#4ade80', fontWeight: 600 }}>
+          ✓ Concluída{peso ? ` · ${peso}kg` : ''}{reps ? ` · ${reps} reps` : ''}
+        </div>
       )}
     </div>
   )

@@ -1,11 +1,21 @@
 import { useState } from 'react'
 import { WORKOUTS, COLORS, DAYS } from '../data'
 import ExerciseBlock from './ExerciseBlock'
+import RestTimer from './RestTimer'
 import SystemInfo from './SystemInfo'
 
 export default function WorkoutView({ workoutKey, onBack, showInfo, onCloseInfo }) {
   const [expandedAll, setExpandedAll] = useState(false)
+  const [activeTimer, setActiveTimer] = useState(null)
   const workout = WORKOUTS[workoutKey]
+
+  const handleSeriesComplete = (exerciseIndex, seriesIndex, color) => {
+    setActiveTimer({ exerciseIndex, seriesIndex, color })
+  }
+
+  const restSeconds = activeTimer?.color
+    ? COLORS[activeTimer.color]?.rest || 60
+    : 60
 
   return (
     <div style={{ minHeight: '100vh', background: 'linear-gradient(180deg, #0a0e1a, #0f172a)', paddingBottom: 40 }}>
@@ -46,9 +56,29 @@ export default function WorkoutView({ workoutKey, onBack, showInfo, onCloseInfo 
       {/* Exercises */}
       <div style={{ padding: '8px 14px', maxWidth: 500, margin: '0 auto' }}>
         {workout.exercises.map((ex, i) => (
-          <ExerciseBlock key={i} exercise={ex} index={i} forceExpand={expandedAll} />
+          <ExerciseBlock
+            key={i}
+            exercise={ex}
+            index={i}
+            forceExpand={expandedAll}
+            workoutKey={workoutKey}
+            onCompleteSeries={handleSeriesComplete}
+            activeTimer={activeTimer}
+          />
         ))}
       </div>
+
+      {/* Global floating timer */}
+      {activeTimer && (
+        <div style={{ padding: '8px 14px', maxWidth: 500, margin: '0 auto' }}>
+          <RestTimer
+            key={`${activeTimer.exerciseIndex}-${activeTimer.seriesIndex}`}
+            seconds={restSeconds}
+            onClose={() => setActiveTimer(null)}
+            onDone={() => {}}
+          />
+        </div>
+      )}
 
       {/* Bottom links */}
       <div style={{ textAlign: 'center', marginTop: 20, paddingBottom: 20 }}>

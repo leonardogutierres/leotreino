@@ -1,14 +1,23 @@
-import { useState } from 'react'
-import { parseSeries, COLORS, findVideo } from '../data'
+import { useState, useEffect } from 'react'
+import { parseSeries, COLORS, findVideo, WORKOUTS } from '../data'
 import SeriesCard from './SeriesCard'
-import RestTimer from './RestTimer'
 import VideoModal from './VideoModal'
+import { savePeso, getPesos, savePR, getPRs } from '../api'
 
-export default function ExerciseBlock({ exercise, index, forceExpand }) {
+const LS_WEIGHTS_KEY = 'leotreino-weights'
+
+function loadWeights() {
+  try { return JSON.parse(localStorage.getItem(LS_WEIGHTS_KEY) || '{}') } catch { return {} }
+}
+
+function saveWeightsLS(data) { localStorage.setItem(LS_WEIGHTS_KEY, JSON.stringify(data)) }
+
+export default function ExerciseBlock({ exercise, index, forceExpand, workoutKey, onCompleteSeries, activeTimer }) {
   const [expanded, setExpanded] = useState(false)
   const [completedSeries, setCompletedSeries] = useState({})
-  const [activeTimerSeries, setActiveTimerSeries] = useState(null)
   const [showVideo, setShowVideo] = useState(false)
+  const [savedWeights, setSavedWeights] = useState({})
+  const [savedReps, setSavedReps] = useState({})
 
   const parsed = exercise.isometric ? [] : parseSeries(exercise.series || '')
   const totalSeries = exercise.isometric ? exercise.sets : parsed.length
@@ -16,18 +25,72 @@ export default function ExerciseBlock({ exercise, index, forceExpand }) {
   const allDone = doneCount === totalSeries && totalSeries > 0
   const isOpen = expanded || forceExpand
   const videoId = findVideo(exercise.name)
+  const dia = WORKOUTS[workoutKey]?.day || ''
 
-  const handleComplete = (seriesIndex) => {
+  useEffect(() => {
+    let cancelled = false
+    async function load() {
+      const fromApi = await getPesos(dia)
+      if (!cancelled && fromApi && fromApi.length > 0) {
+        const w = {}
+        const r = {}
+        fromApi.forEach(row => {
+          if (row.exercicio_index === index) {
+            w[row.serie_index] = row.peso
+            r[row.serie_index] = row.reps
+          }
+        })
+        setSavedWeights(w)
+        setSavedReps(r)
+        return
+      }
+      const ls = loadWeights()
+      const wKey = `${workoutKey}-${index}`
+      if (ls[wKey]) {
+        setSavedWeights(ls[wKey].weights || {})
+        setSavedReps(ls[wKey].reps || {})
+      }
+    }
+    load()
+    return () => { cancelled = true }
+  }, [workoutKey, index, dia])
+
+  const handleComplete = (seriesIndex, reps, peso) => {
     setCompletedSeries(p => ({ ...p, [seriesIndex]: true }))
+
+    if (peso || reps) {
+      const pesoNum = parseFloat(peso) || 0
+      const repsNum = parseInt(reps) || 0
+
+      const wKey = `${workoutKey}-${index}`
+      const ls = loadWeights()
+      const existing = ls[wKey] || { weights: {}, reps: {} }
+      if (peso) existing.weights[seriesIndex] = peso
+      if (reps) existing.reps[seriesIndex] = reps
+      ls[wKey] = existing
+      saveWeightsLS(ls)
+      setSavedWeights(existing.weights)
+      setSavedReps(existing.reps)
+
+      savePeso({ dia, exercicio_index: index, serie_index: seriesIndex, peso: pesoNum, reps: repsNum })
+        .catch(() => {})
+
+      ;(async () => {
+        const prs = await getPRs()
+        if (prs) {
+          const currentPR = prs.find(p => p.dia === dia && p.exercicio_index === index)
+          if (!currentPR || pesoNum > parseFloat(currentPR.peso)) {
+            savePR({ dia, exercicio_index: index, peso: pesoNum }).catch(() => {})
+          }
+        }
+      })()
+    }
+
     const color = parsed[seriesIndex]?.color
     if (color && COLORS[color]) {
-      setActiveTimerSeries(seriesIndex)
+      onCompleteSeries(index, seriesIndex, color)
     }
   }
-
-  const restSeconds = activeTimerSeries !== null && parsed[activeTimerSeries]?.color
-    ? COLORS[parsed[activeTimerSeries].color]?.rest || 60
-    : 60
 
   return (
     <>
@@ -83,16 +146,11 @@ export default function ExerciseBlock({ exercise, index, forceExpand }) {
                     seriesData={s}
                     index={i}
                     completed={!!completedSeries[i]}
-                    onComplete={() => handleComplete(i)}
+                    savedPeso={savedWeights[i] || ''}
+                    savedReps={savedReps[i] || ''}
+                    onComplete={(reps, peso) => handleComplete(i, reps, peso)}
                   />
                 ))}
-                {activeTimerSeries !== null && (
-                  <RestTimer
-                    seconds={restSeconds}
-                    onClose={() => setActiveTimerSeries(null)}
-                    onDone={() => {}}
-                  />
-                )}
               </>
             ) : (
               <div style={{ fontSize: 12, color: '#fca5a5' }}>
