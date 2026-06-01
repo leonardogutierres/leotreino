@@ -1,0 +1,119 @@
+export const COLORS = {
+  verde:   { bg: "rgba(34,197,94,0.15)", border: "#22c55e", text: "#4ade80", label: "VERDE",   emoji: "🟢", desc: "Ativação", rest: 60 },
+  roxo:    { bg: "rgba(168,85,247,0.15)", border: "#a855f7", text: "#c084fc", label: "ROXO",    emoji: "🟣", desc: "Trabalho Controlado", rest: 90 },
+  laranja: { bg: "rgba(249,115,22,0.15)", border: "#f97316", text: "#fb923c", label: "LARANJA", emoji: "🟠", desc: "Série Principal", rest: 120 },
+}
+
+export const VIDEOS = {
+  'prancha': 'PagAI1Y69hg',
+  'abdutora em pe maquina': 'iFhQNP5OjbY',
+  'agachamento pendulo': 'zM5huDUyf1g',
+  'cadeira extensora': 'qYAIhJMdfhA',
+  'cadeira flexora': '7zR57KKqzRc',
+  'crucifixo maquina': 'BzGOaVwx1I8',
+  'desenvolvimento barra guiada': 'mEfGHWPN2Q8',
+  'desenvolvimento maquina pronada': 'qv3NmOK0cEg',
+  'elevacao lateral': 'EV5xblasiz0',
+  'elevacao lateral no cabo': 'NAabJQXU2Xo',
+  'elevacao frontal': 'NAabJQXU2Xo',
+  'face pull': 'X4A5YDIzWe4',
+  'frances unilateral polia': 'cUklJel9C-A',
+  'leg press': 'AFgXRpz7fAg',
+  'mesa flexora': 'cE9kvva34Vg',
+  'panturrilha maquina': '2ZlTS-p9nyg',
+  'puxada alta pegada aberta': '38zG8R_UnjU',
+  'puxada alta pegada supinada': 'd16t_DXWvrA',
+  'remada curvada pronada': 'WO2sWer4n7g',
+  'rosca martelo alternada': 'rX2ER8T60W4',
+  'rosca scott maquina': 'TSHrQrpGEXM',
+  'supino inclinado halter': 'PI5t1zxY4AQ',
+  'supino vertical articulado reto': 'oYsrCgiua9s',
+  'triceps polia barra reta': '1JYgxU-CnNg',
+  'triceps testa': 'wNyKZhxdUBA',
+  'face pull': 'X4A5YDIzWe4',
+}
+
+export function parseSeries(seriesStr) {
+  const parts = seriesStr.split("↑").map(s => s.trim()).filter(Boolean)
+  const result = []
+  if (parts.length === 5) {
+    const order = ["verde", "verde", "roxo", "laranja", "laranja"]
+    parts.forEach((p, i) => {
+      const m = p.match(/(\d+)\s*x\s*(\S+)/)
+      if (m) result.push({ sets: parseInt(m[1]), reps: m[2], color: order[i] })
+    })
+  } else if (parts.length === 4) {
+    const order = ["verde", "roxo", "laranja", "laranja"]
+    parts.forEach((p, i) => {
+      const clean = p.replace(/^\+\-/, "").trim()
+      const m = clean.match(/(\d+)\s*x\s*(\S+)/)
+      if (m) result.push({ sets: parseInt(m[1]), reps: m[2], color: order[i] })
+    })
+  }
+  return result
+}
+
+export function findVideo(name) {
+  const n = name.toLowerCase().replace(/[çãõêáíúôé]/g, c => ({'ç':'c','ã':'a','õ':'o','ê':'e','á':'a','í':'i','ú':'u','ô':'o','é':'e'}[c]||c))
+  for (const [key, vid] of Object.entries(VIDEOS)) {
+    if (n.includes(key)) return vid
+  }
+  return ''
+}
+
+// BUILD_MARKER_v2
+export const WORKOUTS = {
+  A: {
+    name: "TREINO A", subtitle: "PERNAS_TERCA_TEST",
+    day: "TERÇA-FEIRA",
+    exercises: [
+      { name: "Abdutora em pé máquina", series: "+-1x10 ↑ +-1x10 ↑ 1x8-10 ↑ 1x6-8" },
+      { name: "Agachamento pêndulo", series: "+-1x10 ↑ +-1x10 ↑ 1x8-10 ↑ 1x6-8" },
+      { name: "Leg press", series: "+-1x10 ↑ +-1x10 ↑ 1x8-10 ↑ 1x6-8" },
+      { name: "Cadeira extensora", series: "+-1x10 ↑ +-1x10 ↑ 1x8-10 ↑ 1x6-8" },
+      { name: "Cadeira flexora", series: "+-1x10 ↑ +-1x10 ↑ 1x8-10 ↑ 1x6-8" },
+      { name: "Panturrilha máquina", series: "1x15 ↑ 1x15 ↑ 1x18-22 ↑ 1x15-18 ↑ 1x8-12" },
+    ],
+  },
+  B: {
+    name: "TREINO B", subtitle: "Peito / Ombro / Bíceps",
+    day: "QUARTA-FEIRA",
+    exercises: [
+      { name: "Prancha", series: null, isometric: true, sets: 3, duration: "45-60s" },
+      { name: "Supino vertical articulado reto", series: "+-1x10 ↑ +-1x10 ↑ 1x8-10 ↑ 1x6-8" },
+      { name: "Crucifixo máquina", series: "+-1x10 ↑ +-1x10 ↑ 1x8-10 ↑ 1x6-8" },
+      { name: "Desenvolvimento máquina pegada pronada", series: "+-1x10 ↑ +-1x10 ↑ 1x8-10 ↑ 1x6-8" },
+      { name: "Elevação lateral no cabo", series: "+-1x10 ↑ +-1x10 ↑ 1x8-10 ↑ 1x6-8" },
+      { name: "Rosca martelo alternada", series: "+-1x10 ↑ +-1x10 ↑ 1x8-10 ↑ 1x6-8" },
+    ],
+  },
+  C: {
+    name: "TREINO C", subtitle: "Costas / Ombro / Tríceps",
+    day: "QUINTA-FEIRA",
+    exercises: [
+      { name: "Prancha", series: null, isometric: true, sets: 3, duration: "45-60s" },
+      { name: "Remada curvada pegada pronada", series: "+-1x10 ↑ +-1x10 ↑ 1x8-10 ↑ 1x6-8" },
+      { name: "Puxada alta pegada aberta", series: "+-1x10 ↑ +-1x10 ↑ 1x8-10 ↑ 1x6-8" },
+      { name: "Face pull", series: "+-1x10 ↑ +-1x10 ↑ 1x8-10 ↑ 1x6-8" },
+      { name: "Elevação lateral", series: "+-1x10 ↑ +-1x10 ↑ 1x8-10 ↑ 1x6-8" },
+      { name: "Tríceps na polia barra reta", series: "+-1x10 ↑ +-1x10 ↑ 1x8-10 ↑ 1x6-8" },
+      { name: "Francês unilateral na polia", series: "+-1x10 ↑ +-1x10 ↑ 1x8-10 ↑ 1x6-8" },
+    ],
+  },
+  D: {
+    name: "TREINO D", subtitle: "Full Body + Panturrilha",
+    day: "SÁBADO",
+    exercises: [
+      { name: "Puxada alta pegada supinada", series: "+-1x10 ↑ +-1x10 ↑ 1x8-10 ↑ 1x6-8" },
+      { name: "Supino inclinado halter", series: "+-1x10 ↑ +-1x10 ↑ 1x8-10 ↑ 1x6-8" },
+      { name: "Desenvolvimento barra guiada", series: "+-1x10 ↑ +-1x10 ↑ 1x8-10 ↑ 1x6-8" },
+      { name: "Rosca scott máquina", series: "+-1x10 ↑ +-1x10 ↑ 1x8-10 ↑ 1x6-8" },
+      { name: "Tríceps testa", series: "+-1x10 ↑ +-1x10 ↑ 1x8-10 ↑ 1x6-8" },
+      { name: "Mesa flexora", series: "+-1x10 ↑ +-1x10 ↑ 1x8-10 ↑ 1x6-8" },
+      { name: "Cadeira extensora", series: "+-1x10 ↑ +-1x10 ↑ 1x8-10 ↑ 1x6-8" },
+      { name: "Panturrilha máquina", series: "1x15 ↑ 1x15 ↑ 1x18-22 ↑ 1x15-18 ↑ 1x8-12" },
+    ],
+  },
+}
+
+export const DAYS = ["SEGUNDA", "TERÇA", "QUARTA", "QUINTA", "SEXTA", "SÁBADO", "DOMINGO"]
