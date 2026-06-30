@@ -189,28 +189,25 @@
     <section class="section">
         <div class="section-title">⏱️ Jejum — antes de tudo</div>
         <div class="med-item"><input type="checkbox" class="med-checkbox" data-key="jejum-natto"><div class="med-label">Nattokinase 150 mg<div class="subtext">1 cápsula — enquanto usar hormônios</div></div></div>
-    </section>
-
-    <section class="section">
-        <div class="section-title">☀️ Manhã — após primeira refeição</div>
-        <div class="med-item"><input type="checkbox" class="med-checkbox" data-key="manha-vitd-k2"><div class="med-label">Vitamina D3 2000 UI + K2 MK7 100 mcg<div class="subtext">1 cápsula</div></div></div>
-        <div class="med-item"><input type="checkbox" class="med-checkbox" data-key="manha-omega3"><div class="med-label">Ômega 3 2000 mg<div class="subtext">pós primeira refeição</div></div></div>
-        <div class="med-item"><input type="checkbox" class="med-checkbox" data-key="manha-tadalafila"><div class="med-label">Tadalafila 5 mg<div class="subtext">1 comprimido — todos os dias, qualquer horário (prefiro manhã) · enquanto usar hormônios</div></div></div>
+        <div class="med-item"><input type="checkbox" class="med-checkbox" data-key="jejum-telmisartana"><div class="med-label">Telmisartana 40 mg<div class="subtext">1 comprimido — enquanto usar hormônios</div></div></div>
+        <div class="med-item"><input type="checkbox" class="med-checkbox" data-key="jejum-tadalafila"><div class="med-label">Tadalafila 5 mg<div class="subtext">1 comprimido — todos os dias, qualquer horário (prefiro manhã) · enquanto usar hormônios</div></div></div>
     </section>
 
     <section class="section">
         <div class="section-title">🍽️ Pós almoço</div>
-        <div class="med-item"><input type="checkbox" class="med-checkbox" data-key="pos-almoco-telmisartana"><div class="med-label">Telmisartana 40 mg<div class="subtext">1 comprimido — enquanto usar hormônios</div></div></div>
-    </section>
-
-    <section class="section">
-        <div class="section-title">⏰ Qualquer horário</div>
-        <div class="med-item"><input type="checkbox" class="med-checkbox" data-key="qualquer-creatina"><div class="med-label">Creatina 5 g<div class="subtext">todos os dias</div></div></div>
+        <div class="med-item"><input type="checkbox" class="med-checkbox" data-key="pos-almoco-omega3"><div class="med-label">Ômega 3 2000 mg<div class="subtext">pós primeira refeição</div></div></div>
+        <div class="med-item"><input type="checkbox" class="med-checkbox" data-key="pos-almoco-litio"><div class="med-label">Lítio<div class="subtext">2 comprimidos</div></div></div>
     </section>
 
     <section class="section">
         <div class="section-title">🌙 Noite — 1h antes de deitar</div>
         <div class="med-item"><input type="checkbox" class="med-checkbox" data-key="noite-glicina"><div class="med-label">Glicina 5 g<div class="subtext">ciclo de 90 dias</div></div></div>
+        <div class="med-item"><input type="checkbox" class="med-checkbox" data-key="noite-litio"><div class="med-label">Lítio<div class="subtext">3 comprimidos</div></div></div>
+    </section>
+
+    <section class="section">
+        <div class="section-title">⏰ Qualquer horário</div>
+        <div class="med-item"><input type="checkbox" class="med-checkbox" data-key="qualquer-creatina"><div class="med-label">Creatina 5 g<div class="subtext">todos os dias</div></div></div>
     </section>
 
     <div class="actions-row">
@@ -219,11 +216,14 @@
     </div>
 
     <div class="small-info">
-        As marcações ficam salvas no navegador (localStorage).
+        As marcações são salvas no banco de dados e no navegador.
     </div>
 </div>
 
 <script>
+const API = '/api/remedios';
+const today = new Date().toISOString().split('T')[0];
+
 function applySavedTheme() {
     const savedTheme = localStorage.getItem('theme');
     const icon = document.getElementById('theme-icon');
@@ -250,30 +250,72 @@ function toggleThemeMode() {
         icon.textContent = '☀️';
     }
 }
-function loadCheckboxes() {
-    document.querySelectorAll('.med-checkbox').forEach(box => {
-        const key = 'med-' + box.dataset.key;
-        box.checked = localStorage.getItem(key) === 'true';
-        box.addEventListener('change', () => {
-            localStorage.setItem(key, box.checked);
+
+async function salvarRemedio(key, checked) {
+    try {
+        await fetch(API, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ med_key: key, checked, date: today })
         });
+    } catch(e) {}
+    localStorage.setItem('med-' + key, checked);
+}
+
+async function carregarCheckboxes() {
+    try {
+        const res = await fetch(API + '?date=' + today);
+        const data = await res.json();
+        if (data && data.length > 0) {
+            document.querySelectorAll('.med-checkbox').forEach(box => {
+                const found = data.find(d => d.med_key === box.dataset.key);
+                box.checked = found ? found.checked : false;
+            });
+            return;
+        }
+    } catch(e) {}
+    // fallback localStorage
+    document.querySelectorAll('.med-checkbox').forEach(box => {
+        box.checked = localStorage.getItem('med-' + box.dataset.key) === 'true';
     });
 }
+
 function marcarTudoHoje() {
+    const items = [];
     document.querySelectorAll('.med-checkbox').forEach(box => {
         box.checked = true;
         localStorage.setItem('med-' + box.dataset.key, true);
+        items.push({ med_key: box.dataset.key, checked: true });
     });
+    fetch(API + '/bulk', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items, date: today })
+    }).catch(() => {});
 }
+
 function limparTudo() {
+    const items = [];
     document.querySelectorAll('.med-checkbox').forEach(box => {
         box.checked = false;
         localStorage.setItem('med-' + box.dataset.key, false);
+        items.push({ med_key: box.dataset.key, checked: false });
     });
+    fetch(API + '/bulk', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items, date: today })
+    }).catch(() => {});
 }
+
 document.addEventListener('DOMContentLoaded', () => {
     applySavedTheme();
-    loadCheckboxes();
+    carregarCheckboxes();
+    document.querySelectorAll('.med-checkbox').forEach(box => {
+        box.addEventListener('change', () => {
+            salvarRemedio(box.dataset.key, box.checked);
+        });
+    });
     document.getElementById('btn-marcar-tudo-hoje').onclick = marcarTudoHoje;
     document.getElementById('btn-limpar-tudo').onclick = limparTudo;
 });

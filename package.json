@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "vite --port 3000",
-    "build": "cp index.html.bak index.html && vite build && cp dist/index.html . && cp -r dist/assets/* assets/",
+    "build": "cp index.html.bak index.html && vite build && cp dist/index.html . && cp -r dist/assets/* assets/ && cp *.html dist/ 2>/dev/null; true",
     "preview": "vite preview --port 3000",
     "start": "node server.js"
   },

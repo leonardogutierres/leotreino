@@ -6,384 +6,396 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <style>
         :root {
-            --bg-color: #121212;
-            --container-bg: #1e1e1e;
-            --text-color: #e0e0e0;
-            --primary-color: #64b5f6;
-            --secondary-color: #81c784;
-            --accent-color: #1e3a5f;
-            --refeicao-bg: #1e283c;
-            --item-bg: #1a2332;
-            --obs-color: #da7406;
-            --btn-bg: #1565c0;
-            --btn-text: #fff;
+            --bg: #0a0e1a;
+            --card: rgba(255,255,255,0.03);
+            --border: rgba(255,255,255,0.06);
+            --text: #e2e8f0;
+            --sub: #94a3b8;
+            --muted: #64748b;
+            --orange: #f97316;
+            --orange-light: #fb923c;
+            --green: #4ade80;
+            --accent-bg: rgba(249,115,22,0.08);
+            --accent-border: rgba(249,115,22,0.2);
         }
-        .light-mode {
-            --bg-color: #f2f2f2;
-            --container-bg: #fff;
-            --text-color: #222;
-            --primary-color: #0b3470;
-            --secondary-color: #197b30;
-            --accent-color: #deebff;
-            --refeicao-bg: #ebf5fb;
-            --item-bg: #e9f2fe;
-            --obs-color: #d97706;
-            --btn-bg: #0275d8;
-            --btn-text: #fff;
-        }
-        * {
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
-            background: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 0;
-            transition: background 0.3s, color 0.3s;
-            -webkit-font-smoothing: antialiased;
-        }
-        .container {
-            max-width: 580px;
-            margin: 0 auto;
-            padding: 16px;
-            background: var(--container-bg);
+            background: var(--bg);
+            color: var(--text);
             min-height: 100vh;
-            transition: background 0.3s;
+            -webkit-font-smoothing: antialiased;
+            overscroll-behavior-y: none;
         }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            margin-top: 8px;
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(249,115,22,0.05), transparent 60%),
+                        radial-gradient(ellipse 40% 40% at 80% 80%, rgba(249,115,22,0.02), transparent 70%);
+            pointer-events: none;
+            z-index: 0;
         }
-        h1 {
-            color: var(--primary-color);
-            text-align: center;
-            font-weight: 800;
-            margin: 0;
-            letter-spacing: 1px;
-            flex: 1;
-            font-size: 1.5rem;
-        }
-        .header-actions {
-            display: flex;
-            gap: 8px;
-        }
-        .theme-toggle-button,
-        .nav-link-button {
-            background: var(--accent-color);
-            color: var(--primary-color);
-            border: none;
-            border-radius: 50%;
-            width: 36px;
-            height: 36px;
-            font-size: 1.1em;
-            cursor: pointer;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            transition: transform 0.2s;
-        }
-        .theme-toggle-button:active,
-        .nav-link-button:active {
-            transform: scale(0.95);
-        }
+        .container { max-width: 520px; margin: 0 auto; padding: 16px; padding-bottom: 40px; position: relative; z-index: 1; }
 
-        .refeicao {
-            background: var(--refeicao-bg);
-            border-radius: 8px;
-            padding: 16px;
-            margin-bottom: 16px;
-            transition: background 0.3s;
+        .header {
+            display: flex; align-items: center; gap: 12px;
+            padding: 16px 0 20px;
         }
-        .refeicao-titulo {
-            font-weight: bold;
-            font-size: 1.1em;
-            color: var(--secondary-color);
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        .header h1 {
+            flex: 1; text-align: center;
+            font-size: 1.5rem; font-weight: 900;
+            background: linear-gradient(135deg, var(--orange), var(--orange-light));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
-        .refeicao-horario {
-            color: var(--primary-color);
-            font-size: 0.9em;
+        .btn-icon {
+            width: 40px; height: 40px; border-radius: 12px;
+            background: rgba(255,255,255,0.06); border: 1px solid var(--border);
+            color: var(--muted); font-size: 1.2em; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            text-decoration: none; transition: all 0.2s;
         }
-        .item {
-            background: var(--item-bg);
-            border-radius: 5px;
-            padding: 8px 12px;
-            margin-bottom: 8px;
-            transition: background 0.3s;
+        .btn-icon:active { transform: scale(0.95); background: rgba(255,255,255,0.1); }
+
+        .info-card {
+            background: var(--accent-bg); border: 1px solid var(--accent-border);
+            border-radius: 14px; padding: 14px 16px; margin-bottom: 20px;
+            font-size: 0.88rem; line-height: 1.6; color: var(--sub);
         }
-        .item-nome {
-            font-weight: 600;
-            color: var(--text-color);
+        .info-card strong { color: var(--orange); }
+        .info-card .highlight { color: var(--orange); font-weight: 700; }
+
+        .meal {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 16px; margin-bottom: 14px; overflow: hidden;
+            transition: all 0.2s;
         }
-        .item-quantidade {
-            color: var(--primary-color);
-            font-weight: bold;
-            margin-left: 8px;
+        .meal-header {
+            display: flex; align-items: center; gap: 10px;
+            padding: 14px 16px;
+            background: rgba(255,255,255,0.02);
+            border-bottom: 1px solid var(--border);
         }
-        .item-texto {
-            color: var(--text-color);
-            line-height: 1.5;
-            font-size: 0.95rem;
+        .meal-emoji { font-size: 1.4em; }
+        .meal-title { font-weight: 800; color: var(--text); font-size: 1rem; flex: 1; }
+        .meal-time {
+            color: var(--orange); font-size: 0.82rem;
+            font-family: 'JetBrains Mono', monospace; font-weight: 700;
         }
-        .item-texto .destaque {
-            font-weight: 700;
+        .meal-body { padding: 12px 16px; }
+        .meal-item {
+            padding: 8px 12px; margin-bottom: 6px;
+            border-radius: 10px; background: rgba(255,255,255,0.02);
+            font-size: 0.88rem; line-height: 1.5;
+            border-left: 3px solid transparent;
         }
-        .bloco-info {
-            background: rgba(100, 181, 246, 0.12);
-            border: 1px solid rgba(100, 181, 246, 0.35);
-            border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 16px;
-            line-height: 1.55;
-            font-size: 0.95rem;
+        .meal-item:last-child { margin-bottom: 0; }
+        .meal-item.protein { border-left-color: rgba(239,68,68,0.5); }
+        .meal-item.carbs { border-left-color: rgba(249,115,22,0.5); }
+        .meal-item.fat { border-left-color: rgba(234,179,8,0.5); }
+        .meal-item.fruit { border-left-color: rgba(74,222,128,0.5); }
+        .meal-item.dairy { border-left-color: rgba(168,85,247,0.5); }
+        .meal-item.note { border-left-color: rgba(100,181,246,0.5); background: rgba(100,181,246,0.04); }
+        .meal-label {
+            font-size: 0.7rem; font-weight: 800; text-transform: uppercase;
+            letter-spacing: 1px; margin-bottom: 3px;
         }
-        .observacoes {
-            background: var(--refeicao-bg);
-            border-radius: 8px;
-            padding: 16px;
-            margin-top: 24px;
+        .meal-label.protein { color: #ef4444; }
+        .meal-label.carbs { color: var(--orange); }
+        .meal-label.fat { color: #eab308; }
+        .meal-label.fruit { color: var(--green); }
+        .meal-label.dairy { color: #a855f7; }
+
+        .check-section {
+            margin-top: 24px; padding: 16px;
+            background: var(--accent-bg); border: 1px solid var(--accent-border);
+            border-radius: 16px;
         }
-        .observacoes h2 {
-            color: var(--obs-color);
-            font-size: 1.2em;
-            margin-top: 0;
-            margin-bottom: 12px;
-        }
-        .checklist-rapido {
-            margin: 10px 0 14px;
-            padding: 12px;
-            border-radius: 8px;
-            background: rgba(100, 181, 246, 0.1);
-            border: 1px solid rgba(100, 181, 246, 0.35);
-        }
-        .checklist-rapido-title {
-            color: var(--primary-color);
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
+        .check-title { font-weight: 800; color: var(--orange); margin-bottom: 12px; font-size: 0.95rem; }
         .check-item {
-            font-size: 0.94rem;
-            line-height: 1.5;
-            margin-bottom: 6px;
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px 0; border-top: 1px solid var(--border);
+            cursor: pointer;
         }
-        .check-item:last-child {
-            margin-bottom: 0;
+        .check-item:first-of-type { border-top: none; }
+        .check-item input { width: 20px; height: 20px; accent-color: var(--orange); cursor: pointer; }
+        .check-label { font-size: 0.9rem; color: var(--text); }
+        .check-label small { color: var(--muted); display: block; font-size: 0.75rem; margin-top: 2px; }
+
+        .btn-row { display: flex; gap: 10px; margin-top: 16px; }
+        .btn {
+            flex: 1; padding: 12px; border-radius: 12px; border: none;
+            font-size: 0.9rem; font-weight: 700; cursor: pointer;
+            transition: all 0.2s;
         }
-        .obs-item {
-            margin-bottom: 10px;
-            line-height: 1.6;
-            padding-left: 20px;
-            position: relative;
-            font-size: 0.95rem;
-        }
-        .obs-item:before {
-            content: "▪";
-            position: absolute;
-            left: 0;
-            color: var(--primary-color);
-            font-weight: bold;
-        }
-        .obs-group-title {
-            color: var(--secondary-color);
-            font-weight: 700;
-            margin-top: 14px;
-            margin-bottom: 8px;
-            letter-spacing: 0.2px;
-        }
-        .destaque {
-            color: var(--obs-color);
-            font-weight: bold;
+        .btn:active { transform: scale(0.97); }
+        .btn-primary { background: var(--orange); color: #fff; }
+        .btn-secondary { background: rgba(255,255,255,0.06); color: var(--sub); border: 1px solid var(--border); }
+
+        .footer-link {
+            display: block; text-align: center; margin-top: 20px;
+            color: var(--muted); text-decoration: none; font-size: 0.85rem; font-weight: 600;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header class="header">
-            <div class="header-actions">
-                <a href="./index.html" class="nav-link-button" title="Voltar aos treinos">🏋️</a>
-            </div>
+            <a href="./index.html" class="btn-icon" title="Treinos">🏋️</a>
             <h1>Dieta Semanal</h1>
-            <div class="header-actions">
-                <button class="theme-toggle-button" onclick="toggleThemeMode()">
-                <a href="plano-leonardo.html" class="nav-link-button" title="Plano do Dia">📄</a>
-                </div>
-                <div class="header-actions">
-                    <button class="theme-toggle-button" onclick="toggleThemeMode()">
-                    <span id="theme-icon">☀️</span>
-                </button>
-            </div>
+            <a href="plano-leonardo.html" class="btn-icon" title="Plano">📄</a>
         </header>
 
-        <div class="bloco-info">
-            <strong>Plano alimentar - Todos os dias (Leonardo Gutierres Silva)</strong><br>
-            Horarios ilustrativos (aproximados): ajuste conforme sua rotina.<br>
-            <span class="destaque">Sem balanca nao existe dieta.</span> Leia as observacoes com atencao antes de iniciar.<br>
-            <span class="destaque">Refeicao livre semanal:</span> ate 1000 kcal, substituindo janta e ceia.
+        <div class="info-card">
+            <strong>Plano alimentar — Leonardo Gutierres Silva</strong><br>
+            Horários ilustrativos: ajuste conforme sua rotina.<br>
+            <span class="highlight">Sem balança não existe dieta.</span><br>
+            <span class="highlight">Refeição livre semanal:</span> até 1000 kcal, substituindo janta e ceia.
         </div>
-        
-        <!-- REFEIÇÃO 1 -->
-        <div class="refeicao">
-            <div class="refeicao-titulo">
-                🌅 CAFE DA MANHA <span class="refeicao-horario">- 07:30</span>
+
+        <!-- CAFÉ DA MANHÃ -->
+        <div class="meal">
+            <div class="meal-header">
+                <span class="meal-emoji">🌅</span>
+                <span class="meal-title">Café da Manhã</span>
+                <span class="meal-time">07:30</span>
             </div>
-            <div class="item">
-                <div class="item-texto"><span class="destaque">Carboidrato:</span> Pao de forma (2 fatias) OU pao frances sem miolo (1 un) OU tapioca de goma (45g)</div>
-            </div>
-            <div class="item">
-                <div class="item-texto"><span class="destaque">Proteina:</span> Ovo de galinha (2 un) OU peito de peru (100g)</div>
-            </div>
-            <div class="item">
-                <div class="item-texto"><span class="destaque">Laticinio:</span> Leite desnatado (200g) OU mussarela (25g) OU requeijao (30g)</div>
-            </div>
-            <div class="item">
-                <div class="item-texto"><span class="destaque">Obs:</span> Priorize ovos como principal desta refeicao. Os demais entram como alternativa/divisao, mantendo proporcao.</div>
-            </div>
-        </div>
-        
-        <!-- REFEIÇÃO 2 -->
-        <div class="refeicao">
-            <div class="refeicao-titulo">
-                🍌 COLACAO <span class="refeicao-horario">- 10:00</span>
-            </div>
-            <div class="item">
-                <div class="item-texto">Banana (1 un) OU abacaxi (150g) OU uva (100g) OU maca vermelha (1 un) OU mamao (180g) OU melao (200g) OU goiaba (1 un) OU morango (240g) OU melancia (240g)</div>
+            <div class="meal-body">
+                <div class="meal-item carbs">
+                    <div class="meal-label carbs">Carboidrato</div>
+                    Pão de forma (2 fatias) OU pão francês sem miolo (1 un) OU tapioca de goma (45g)
+                </div>
+                <div class="meal-item protein">
+                    <div class="meal-label protein">Proteína</div>
+                    Ovo de galinha (2 un) OU peito de peru (100g)
+                </div>
+                <div class="meal-item dairy">
+                    <div class="meal-label dairy">Laticínio</div>
+                    Leite desnatado (200g) OU mussarela (25g) OU requeijão (30g)
+                </div>
+                <div class="meal-item note">
+                    Priorize ovos como principal. Demais entram como alternativa mantendo proporção.
+                </div>
             </div>
         </div>
 
-        <!-- REFEIÇÃO 3 -->
-        <div class="refeicao">
-            <div class="refeicao-titulo">
-                🍽️ ALMOCO <span class="refeicao-horario">- 12:00</span>
+        <!-- COLAÇÃO -->
+        <div class="meal">
+            <div class="meal-header">
+                <span class="meal-emoji">🍌</span>
+                <span class="meal-title">Colação</span>
+                <span class="meal-time">10:00</span>
             </div>
-            <div class="item">
-                <div class="item-texto"><span class="destaque">Base:</span> Arroz branco cozido (320g) OU arroz com feijao (340g) OU macarrao (240g) OU batata doce (390g) OU batata cozida (440g) OU mandioca (330g) OU mandioquinha (380g)</div>
-            </div>
-            <div class="item">
-                <div class="item-texto"><span class="destaque">Proteina:</span> File de frango (120g) OU carne bovina magra (110g) OU peixe magro assado/cozido (130g)</div>
-            </div>
-            <div class="item">
-                <div class="item-texto"><span class="destaque">Gordura:</span> Azeite extra virgem (5g) OU castanha do Para sem sal (6g)</div>
-            </div>
-            <div class="item">
-                <div class="item-texto"><span class="destaque">Obs:</span> Tem que ter verduras e vegetais nesta refeicao. Arroz e feijao podem ser divididos conforme paladar (proximo de meio a meio).</div>
-            </div>
-        </div>
-        
-        <!-- REFEIÇÃO 4 -->
-        <div class="refeicao">
-            <div class="refeicao-titulo">
-                ☕ LANCHE DA TARDE <span class="refeicao-horario">- 16:30</span>
-            </div>
-            <div class="item">
-                <div class="item-texto">Whey (1 porcao)</div>
-            </div>
-            <div class="item">
-                <div class="item-texto">Aveia em flocos/farelo (45g) OU biscoito maisena (8 un) OU sucrilhos Kellogg's (50g) OU farinha lactea Nestle (45g)</div>
-            </div>
-            <div class="item">
-                <div class="item-texto">Banana (1 un) OU abacaxi (150g) OU maca vermelha (1 un) OU manga (100g) OU uva (100g) OU mamao (180g) OU morango (200g)</div>
-            </div>
-            <div class="item">
-                <div class="item-texto">Iogurte desnatado (170g) OU leite desnatado (200g)</div>
-            </div>
-            <div class="item">
-                <div class="item-texto"><span class="destaque">Substituicao 1:</span> Arroz branco (220g) OU arroz com feijao (240g) OU macarrao (170g) OU batata cozida (310g) OU batata doce (280g) + file de frango (100g) OU carne magra (90g) OU peixe magro (110g)</div>
-            </div>
-            <div class="item">
-                <div class="item-texto"><span class="destaque">Obs:</span> Vegetais/verduras da lista: a vontade (tem que ter).</div>
-            </div>
-        </div>
-        
-        <!-- REFEIÇÃO 5 -->
-        <div class="refeicao">
-            <div class="refeicao-titulo">
-                🌙 JANTAR <span class="refeicao-horario">- 21:30</span>
-            </div>
-            <div class="item">
-                <div class="item-texto"><span class="destaque">Base:</span> Arroz branco cozido (320g) OU arroz com feijao (340g) OU macarrao (240g) OU batata doce (390g) OU batata cozida (440g) OU mandioca (330g) OU mandioquinha (380g)</div>
-            </div>
-            <div class="item">
-                <div class="item-texto"><span class="destaque">Proteina:</span> File de frango (120g) OU carne bovina magra (110g) OU peixe magro assado/cozido (130g)</div>
-            </div>
-            <div class="item">
-                <div class="item-texto"><span class="destaque">Gordura:</span> Azeite extra virgem (5g) OU castanha do Para sem sal (6g)</div>
-            </div>
-            <div class="item">
-                <div class="item-texto"><span class="destaque">Obs:</span> Tem que ter verduras e vegetais nesta refeicao. Arroz e feijao podem ser divididos conforme paladar.</div>
+            <div class="meal-body">
+                <div class="meal-item fruit">
+                    <div class="meal-label fruit">Fruta</div>
+                    Banana (1 un) OU abacaxi (150g) OU uva (100g) OU maçã vermelha (1 un) OU mamão (180g) OU melão (200g) OU goiaba (1 un) OU morango (240g) OU melancia (240g)
+                </div>
             </div>
         </div>
 
-        <!-- REFEIÇÃO 6 -->
-        <div class="refeicao">
-            <div class="refeicao-titulo">
-                🛌 CEIA <span class="refeicao-horario">- 22:00</span>
+        <!-- ALMOÇO -->
+        <div class="meal">
+            <div class="meal-header">
+                <span class="meal-emoji">🍽️</span>
+                <span class="meal-title">Almoço</span>
+                <span class="meal-time">12:00</span>
             </div>
-            <div class="item">
-                <div class="item-texto">Iogurte desnatado (170g) OU leite desnatado (200g)</div>
-            </div>
-            <div class="item">
-                <div class="item-texto">Banana (1 un) OU mamao (180g) OU goiaba (1 un) OU maca vermelha (1 un) OU abacaxi (150g) OU uva (100g) OU melao (200g)</div>
-            </div>
-            <div class="item">
-                <div class="item-texto">Whey (1 porcao)</div>
+            <div class="meal-body">
+                <div class="meal-item carbs">
+                    <div class="meal-label carbs">Base</div>
+                    Arroz branco cozido (320g) OU arroz com feijão (340g) OU macarrão (240g) OU batata doce (390g) OU batata cozida (440g) OU mandioca (330g) OU mandioquinha (380g)
+                </div>
+                <div class="meal-item protein">
+                    <div class="meal-label protein">Proteína</div>
+                    Filé de frango (120g) OU carne bovina magra (110g) OU peixe magro (130g)
+                </div>
+                <div class="meal-item fat">
+                    <div class="meal-label fat">Gordura</div>
+                    Azeite extra virgem (5g) OU castanha do Pará sem sal (6g)
+                </div>
+                <div class="meal-item note">
+                    Tem que ter verduras e vegetais. Arroz e feijão podem ser divididos conforme paladar.
+                </div>
             </div>
         </div>
-        
-        <!-- OBSERVAÇÕES -->
-        <div style="text-align:center;margin-top:20px;">
-            <a href="observacoes.html" style="
-                display:inline-block;padding:12px 24px;border-radius:8px;
-                background:var(--refeicao-bg);color:var(--secondary-color);
-                font-weight:700;text-decoration:none;font-size:0.95rem;
-                border:1px solid var(--glass-border);">📋 Ver Observações Importantes</a>
+
+        <!-- LANCHE DA TARDE -->
+        <div class="meal">
+            <div class="meal-header">
+                <span class="meal-emoji">☕</span>
+                <span class="meal-title">Lanche da Tarde</span>
+                <span class="meal-time">16:30</span>
+            </div>
+            <div class="meal-body">
+                <div class="meal-item protein">
+                    <div class="meal-label protein">Suplemento</div>
+                    Whey (1 porção)
+                </div>
+                <div class="meal-item carbs">
+                    <div class="meal-label carbs">Carboidrato</div>
+                    Aveia em flocos/farelo (45g) OU biscoito maisena (8 un) OU sucrilhos (50g) OU farinha láctea (45g)
+                </div>
+                <div class="meal-item fruit">
+                    <div class="meal-label fruit">Fruta</div>
+                    Banana (1 un) OU abacaxi (150g) OU maçã vermelha (1 un) OU manga (100g) OU uva (100g) OU mamão (180g) OU morango (200g)
+                </div>
+                <div class="meal-item dairy">
+                    <div class="meal-label dairy">Laticínio</div>
+                    Iogurte desnatado (170g) OU leite desnatado (200g)
+                </div>
+                <div class="meal-item note">
+                    <strong>Substituição:</strong> Arroz branco (220g) OU arroz com feijão (240g) OU macarrão (170g) OU batata cozida (310g) OU batata doce (280g) + filé de frango (100g) OU carne magra (90g) OU peixe magro (110g). Vegetais/verduras da lista: à vontade.
+                </div>
+            </div>
         </div>
+
+        <!-- JANTAR -->
+        <div class="meal">
+            <div class="meal-header">
+                <span class="meal-emoji">🌙</span>
+                <span class="meal-title">Jantar</span>
+                <span class="meal-time">21:30</span>
+            </div>
+            <div class="meal-body">
+                <div class="meal-item carbs">
+                    <div class="meal-label carbs">Base</div>
+                    Arroz branco cozido (320g) OU arroz com feijão (340g) OU macarrão (240g) OU batata doce (390g) OU batata cozida (440g) OU mandioca (330g) OU mandioquinha (380g)
+                </div>
+                <div class="meal-item protein">
+                    <div class="meal-label protein">Proteína</div>
+                    Filé de frango (120g) OU carne bovina magra (110g) OU peixe magro (130g)
+                </div>
+                <div class="meal-item fat">
+                    <div class="meal-label fat">Gordura</div>
+                    Azeite extra virgem (5g) OU castanha do Pará sem sal (6g)
+                </div>
+                <div class="meal-item note">
+                    Tem que ter verduras e vegetais. Arroz e feijão podem ser divididos conforme paladar.
+                </div>
+            </div>
+        </div>
+
+        <!-- CEIA -->
+        <div class="meal">
+            <div class="meal-header">
+                <span class="meal-emoji">🛌</span>
+                <span class="meal-title">Ceia</span>
+                <span class="meal-time">22:00</span>
+            </div>
+            <div class="meal-body">
+                <div class="meal-item dairy">
+                    <div class="meal-label dairy">Laticínio</div>
+                    Iogurte desnatado (170g) OU leite desnatado (200g)
+                </div>
+                <div class="meal-item fruit">
+                    <div class="meal-label fruit">Fruta</div>
+                    Banana (1 un) OU mamão (180g) OU goiaba (1 un) OU maçã vermelha (1 un) OU abacaxi (150g) OU uva (100g) OU melão (200g)
+                </div>
+                <div class="meal-item protein">
+                    <div class="meal-label protein">Suplemento</div>
+                    Whey (1 porção)
+                </div>
+            </div>
+        </div>
+
+        <!-- CHECKLIST DIÁRIO -->
+        <div class="check-section">
+            <div class="check-title">✅ Checklist Diário</div>
+            <div class="check-item" onclick="toggleCheck('dieta-segui')">
+                <input type="checkbox" id="check-dieta-segui" data-key="dieta-segui">
+                <span class="check-label">Segui a dieta hoje <small>Todas as refeições conforme o plano</small></span>
+            </div>
+            <div class="check-item" onclick="toggleCheck('dieta-pesei')">
+                <input type="checkbox" id="check-dieta-pesei" data-key="dieta-pesei">
+                <span class="check-label">Usei a balança <small>Pesei os alimentos</small></span>
+            </div>
+            <div class="check-item" onclick="toggleCheck('dieta-agua')">
+                <input type="checkbox" id="check-dieta-agua" data-key="dieta-agua">
+                <span class="check-label">Água: 3L+ <small>Hidratação adequada</small></span>
+            </div>
+            <div class="check-item" onclick="toggleCheck('dieta-livre')">
+                <input type="checkbox" id="check-dieta-livre" data-key="dieta-livre">
+                <span class="check-label">Refeição livre da semana <small>Até 1000 kcal, substituindo janta + ceia</small></span>
+            </div>
+
+            <div class="btn-row">
+                <button class="btn btn-primary" onclick="marcarTudo()">✓ Marcar tudo</button>
+                <button class="btn btn-secondary" onclick="limparTudo()">Limpar</button>
+            </div>
+        </div>
+
+        <a href="observacoes.html" class="footer-link">📋 Ver Observações Importantes</a>
     </div>
-    </div>
-    
+
     <script>
-        // Aplica o tema salvo (mesmo esquema do index e remedio)
-        function applySavedTheme() {
-            const savedTheme = localStorage.getItem('theme');
-            const icon = document.getElementById('theme-icon');
-            if (savedTheme === 'light') {
-                document.body.classList.add('light-mode');
-                if (icon) icon.textContent = '🌙';
-            } else {
-                document.body.classList.add('dark-mode');
-                if (icon) icon.textContent = '☀️';
-            }
+        const API = '/api/remedios';
+        const today = new Date().toISOString().split('T')[0];
+
+        async function salvar(key, checked) {
+            try {
+                await fetch(API, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ med_key: key, checked, date: today })
+                });
+            } catch(e) {}
+            localStorage.setItem('dieta-' + key, checked);
         }
 
-        // Alterna o tema e salva no localStorage
-        function toggleThemeMode() {
-            const body = document.body;
-            const icon = document.getElementById('theme-icon');
-            if (body.classList.contains('dark-mode')) {
-                body.classList.remove('dark-mode');
-                body.classList.add('light-mode');
-                localStorage.setItem('theme', 'light');
-                if (icon) icon.textContent = '🌙';
-            } else {
-                body.classList.remove('light-mode');
-                body.classList.add('dark-mode');
-                localStorage.setItem('theme', 'dark');
-                if (icon) icon.textContent = '☀️';
-            }
+        async function carregar() {
+            try {
+                const res = await fetch(API + '?date=' + today);
+                const data = await res.json();
+                if (data && data.length > 0) {
+                    document.querySelectorAll('[data-key]').forEach(el => {
+                        const found = data.find(d => d.med_key === el.dataset.key);
+                        el.checked = found ? found.checked : false;
+                    });
+                    return;
+                }
+            } catch(e) {}
+            document.querySelectorAll('[data-key]').forEach(el => {
+                el.checked = localStorage.getItem('dieta-' + el.dataset.key) === 'true';
+            });
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            applySavedTheme();
-        });
+        function toggleCheck(key) {
+            const cb = document.querySelector('[data-key="' + key + '"]');
+            if (!cb) return;
+            cb.checked = !cb.checked;
+            salvar(key, cb.checked);
+        }
+
+        function marcarTudo() {
+            const items = [];
+            document.querySelectorAll('[data-key]').forEach(el => {
+                el.checked = true;
+                localStorage.setItem('dieta-' + el.dataset.key, true);
+                items.push({ med_key: el.dataset.key, checked: true });
+            });
+            fetch(API + '/bulk', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ items, date: today })
+            }).catch(() => {});
+        }
+
+        function limparTudo() {
+            const items = [];
+            document.querySelectorAll('[data-key]').forEach(el => {
+                el.checked = false;
+                localStorage.setItem('dieta-' + el.dataset.key, false);
+                items.push({ med_key: el.dataset.key, checked: false });
+            });
+            fetch(API + '/bulk', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ items, date: today })
+            }).catch(() => {});
+        }
+
+        document.addEventListener('DOMContentLoaded', carregar);
     </script>
 </body>
 </html>
