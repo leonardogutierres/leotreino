@@ -4,321 +4,376 @@
     <meta charset="UTF-8">
     <title>Remédios</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
     <style>
         :root {
-            --bg-color: #121212;
-            --container-bg: #1e1e1e;
-            --text-color: #e0e0e0;
-            --primary-color: #64b5f6;
-            --secondary-color: #81c784;
-            --accent-color: #1e3a5f;
-            --active-color: #0d47a1;
-            --input-bg: #2d2d2d;
-            --border-color: #4a6b8a;
-            --btn-bg: #1565c0;
-            --btn-text: #fff;
+            --bg: #0a0e1a;
+            --card: rgba(255,255,255,0.03);
+            --border: rgba(255,255,255,0.06);
+            --text: #e2e8f0;
+            --sub: #94a3b8;
+            --muted: #64748b;
+            --orange: #f97316;
+            --orange-light: #fb923c;
+            --green: #4ade80;
+            --red: #ef4444;
+            --purple: #a855f7;
+            --blue: #60a5fa;
         }
-        .light-mode {
-            --bg-color: #f5f5f5;
-            --container-bg: #ffffff;
-            --text-color: #222222;
-            --primary-color: #0b3470;
-            --secondary-color: #197b30;
-            --accent-color: #deebff;
-            --active-color: #1976d2;
-            --input-bg: #ffffff;
-            --border-color: #a3cafe;
-            --btn-bg: #0275d8;
-            --btn-text: #ffffff;
-        }
-
-        * {
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
-            background: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 0;
-            -webkit-font-smoothing: antialiased;
-        }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 16px;
-            padding-bottom: 32px;
-            background: var(--container-bg);
+            background: var(--bg);
+            color: var(--text);
             min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            overscroll-behavior-y: none;
         }
+        body::before {
+            content: '';
+            position: fixed; inset: 0;
+            background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(239,68,68,0.04), transparent 60%),
+                        radial-gradient(ellipse 40% 40% at 20% 80%, rgba(168,85,247,0.03), transparent 70%);
+            pointer-events: none; z-index: 0;
+        }
+        .container { max-width: 520px; margin: 0 auto; padding: 16px; padding-bottom: 40px; position: relative; z-index: 1; }
+
         .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-            margin-top: 8px;
+            display: flex; align-items: center; gap: 12px;
+            padding: 16px 0 24px;
         }
-        h1 {
-            margin: 0;
-            color: var(--primary-color);
-            font-size: 1.6rem;
-            font-weight: 800;
+        .header h1 {
+            flex: 1; text-align: center;
+            font-size: 1.5rem; font-weight: 900;
+            background: linear-gradient(135deg, var(--purple), #c084fc);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
-        .header-actions {
-            display: flex;
-            gap: 8px;
+        .btn-icon {
+            width: 40px; height: 40px; border-radius: 12px;
+            background: rgba(255,255,255,0.06); border: 1px solid var(--border);
+            color: var(--muted); font-size: 1.2em; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            text-decoration: none; transition: all 0.2s;
         }
-        .theme-toggle-button,
-        .nav-link-button {
-            background: var(--accent-color);
-            color: var(--primary-color);
-            border: none;
-            border-radius: 50%;
-            width: 36px;
-            height: 36px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1.1em;
-            cursor: pointer;
-            text-decoration: none;
-            transition: background 0.3s, transform 0.2s;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-        .theme-toggle-button:active,
-        .nav-link-button:active {
-            transform: scale(0.95);
-        }
+        .btn-icon:active { transform: scale(0.95); background: rgba(255,255,255,0.1); }
 
         .section {
-            margin-top: 16px;
-            padding: 14px;
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
-            background: rgba(0,0,0,0.1);
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 16px; margin-bottom: 14px; overflow: hidden;
         }
-        .section-title {
-            font-weight: 700;
-            font-size: 1.1rem;
-            margin-bottom: 8px;
-            color: var(--primary-color);
+        .section-header {
+            display: flex; align-items: center; gap: 10px;
+            padding: 14px 16px;
+            background: rgba(255,255,255,0.02);
+            border-bottom: 1px solid var(--border);
         }
+        .section-icon { font-size: 1.2em; }
+        .section-title { font-weight: 800; color: var(--text); font-size: 0.95rem; flex: 1; }
+        .section-badge {
+            font-size: 0.7rem; font-weight: 700; padding: 3px 10px; border-radius: 20px;
+            background: rgba(255,255,255,0.06); color: var(--muted);
+        }
+        .section-body { padding: 8px 0; }
 
-        .med-item {
-            display: flex;
-            align-items: center;
-            padding: 8px 0;
-            gap: 10px;
+        .med-row {
+            display: flex; align-items: center; gap: 12px;
+            padding: 12px 16px; cursor: pointer;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            transition: background 0.15s;
         }
-        .med-item + .med-item {
-            border-top: 1px solid rgba(255,255,255,0.05);
-        }
-        .med-checkbox {
-            width: 18px;
-            height: 18px;
-        }
-        .med-label {
-            flex: 1;
-            font-size: 0.95rem;
-        }
-        .subtext {
-            font-size: 0.8rem;
-            opacity: 0.7;
-            margin-top: 2px;
-        }
+        .med-row:last-child { border-bottom: none; }
+        .med-row:active { background: rgba(255,255,255,0.03); }
+        .med-row.done { opacity: 0.55; }
+        .med-row.done .med-name { text-decoration: line-through; text-decoration-color: rgba(255,255,255,0.3); }
 
-        .actions-row {
-            margin-top: 20px;
-            display: flex;
-            gap: 10px;
+        .med-check {
+            width: 24px; height: 24px; border-radius: 50%;
+            border: 2px solid var(--border); flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s;
         }
+        .med-row.done .med-check {
+            border-color: var(--green); background: rgba(74,222,128,0.15);
+        }
+        .med-check::after {
+            content: '✓'; font-size: 12px; color: var(--green); font-weight: 900;
+            opacity: 0; transform: scale(0.5); transition: all 0.2s;
+        }
+        .med-row.done .med-check::after { opacity: 1; transform: scale(1); }
+
+        .med-info { flex: 1; min-width: 0; }
+        .med-name { font-size: 0.9rem; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+        .med-detail { font-size: 0.78rem; color: var(--muted); line-height: 1.4; }
+
+        .info-box {
+            background: rgba(168,85,247,0.06); border: 1px solid rgba(168,85,247,0.15);
+            border-radius: 12px; padding: 14px 16px; margin-bottom: 14px;
+            font-size: 0.82rem; line-height: 1.7; color: var(--sub);
+        }
+        .info-box strong { color: var(--purple); }
+
+        .btn-row { display: flex; gap: 10px; margin-top: 20px; }
         .btn {
-            flex: 1;
-            border-radius: 10px;
-            padding: 10px 12px;
-            border: none;
-            font-size: 0.95rem;
-            font-weight: 600;
-            cursor: pointer;
-            background: var(--btn-bg);
-            color: var(--btn-text);
+            flex: 1; padding: 14px; border-radius: 14px; border: none;
+            font-size: 0.9rem; font-weight: 700; cursor: pointer;
+            transition: all 0.2s;
         }
-        .btn-secondary {
-            background: transparent;
-            color: var(--primary-color);
-            border: 1px solid var(--border-color);
-        }
+        .btn:active { transform: scale(0.97); }
+        .btn-primary { background: var(--purple); color: #fff; }
+        .btn-secondary { background: rgba(255,255,255,0.06); color: var(--sub); border: 1px solid var(--border); }
+        .btn-danger { background: rgba(239,68,68,0.15); color: var(--red); border: 1px solid rgba(239,68,68,0.2); }
 
-        .small-info {
-            font-size: 0.75rem;
-            opacity: 0.7;
-            margin-top: 8px;
+        .status-bar {
+            display: flex; align-items: center; gap: 8px;
+            padding: 10px 0; font-size: 0.8rem; color: var(--muted);
         }
+        .progress-dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: var(--muted); transition: background 0.3s;
+        }
+        .progress-dot.done { background: var(--green); }
+
+        @keyframes checkPop {
+            0% { transform: scale(0.5); opacity: 0; }
+            60% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .pop { animation: checkPop 0.3s ease-out; }
     </style>
 </head>
 <body>
-<div class="container">
-    <header class="header">
-        <h1>Remédios</h1>
-        <div class="header-actions">
-            <a href="./index.html" class="nav-link-button" title="Voltar aos treinos">🏋️</a>
-            <button class="theme-toggle-button" onclick="toggleThemeMode()">
-                <span id="theme-icon">☀️</span>
-            </button>
+    <div class="container">
+        <header class="header">
+            <a href="./index.html" class="btn-icon" title="Treinos">🏋️</a>
+            <h1>Remédios</h1>
+            <a href="plano-leonardo.html" class="btn-icon" title="Plano">📄</a>
+        </header>
+
+        <!-- Progresso do dia -->
+        <div class="status-bar" style="justify-content:center;gap:6px;margin-bottom:12px;">
+            <span id="progress-text">0/0 concluídos</span>
         </div>
-    </header>
 
-    <section class="section">
-        <div class="section-title">💉 Injetáveis — todos os dias</div>
-        <div class="med-item"><input type="checkbox" class="med-checkbox" data-key="inj-testo"><div class="med-label">Testosterona Enantato 300 mg/ml<div class="subtext">0,17 ml (17 UI) — 50 mg/dia</div></div></div>
-        <div class="med-item"><input type="checkbox" class="med-checkbox" data-key="inj-master"><div class="med-label">Masteron 100 mg/ml<div class="subtext">0,40 ml (40 UI) = 40 mg/dia</div></div></div>
-        <div class="small-info" style="margin-top:12px;">
-            <strong>Testosterona Enantato 300 mg/ml (0,17 ml/dia = 50 mg):</strong><br>
-            &nbsp;&nbsp;Semanal: 0,17 × 7 = 1,2 ml<br>
-            &nbsp;&nbsp;Mensal: 0,17 × 30 = 5,0 ml<br>
-            &nbsp;&nbsp;Ciclo 3 meses: 15,0 ml → 2 frascos de 10 ml<br><br>
-            <strong>Masteron (0,40 ml/dia):</strong><br>
-            &nbsp;&nbsp;Semanal: 0,40 × 7 = 2,8 ml<br>
-            &nbsp;&nbsp;Mensal: 0,40 × 30 = 12,0 ml<br>
-            &nbsp;&nbsp;Ciclo 3 meses: 36,0 ml → 4 frascos de 10 ml
+        <!-- INJETÁVEIS -->
+        <div class="section">
+            <div class="section-header">
+                <span class="section-icon">💉</span>
+                <span class="section-title">Injetáveis</span>
+                <span class="section-badge">todos os dias</span>
+            </div>
+            <div class="section-body">
+                <div class="med-row" onclick="toggleMed(this, 'inj-testo')">
+                    <div class="med-check"></div>
+                    <div class="med-info">
+                        <div class="med-name">Testosterona Enantato</div>
+                        <div class="med-detail">300 mg/ml · 0,17 ml (17 UI) = 50 mg/dia</div>
+                    </div>
+                </div>
+                <div class="med-row" onclick="toggleMed(this, 'inj-master')">
+                    <div class="med-check"></div>
+                    <div class="med-info">
+                        <div class="med-name">Masteron</div>
+                        <div class="med-detail">100 mg/ml · 0,40 ml (40 UI) = 40 mg/dia</div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </section>
 
-    <section class="section">
-        <div class="section-title">⏱️ Jejum — antes de tudo</div>
-        <div class="med-item"><input type="checkbox" class="med-checkbox" data-key="jejum-natto"><div class="med-label">Nattokinase 150 mg<div class="subtext">1 cápsula — enquanto usar hormônios</div></div></div>
-        <div class="med-item"><input type="checkbox" class="med-checkbox" data-key="jejum-telmisartana"><div class="med-label">Telmisartana 40 mg<div class="subtext">1 comprimido — enquanto usar hormônios</div></div></div>
-        <div class="med-item"><input type="checkbox" class="med-checkbox" data-key="jejum-tadalafila"><div class="med-label">Tadalafila 5 mg<div class="subtext">1 comprimido — todos os dias, qualquer horário (prefiro manhã) · enquanto usar hormônios</div></div></div>
-    </section>
+        <!-- DOSAGEM INFO -->
+        <div class="info-box">
+            <strong>Testosterona:</strong> 0,17 × 7 = 1,2 ml/sem · 5,0 ml/mês · 15 ml/ciclo → 2 frascos de 10 ml<br>
+            <strong>Masteron:</strong> 0,40 × 7 = 2,8 ml/sem · 12,0 ml/mês · 36 ml/ciclo → 4 frascos de 10 ml
+        </div>
 
-    <section class="section">
-        <div class="section-title">🍽️ Pós almoço</div>
-        <div class="med-item"><input type="checkbox" class="med-checkbox" data-key="pos-almoco-omega3"><div class="med-label">Ômega 3 2000 mg<div class="subtext">pós primeira refeição</div></div></div>
-        <div class="med-item"><input type="checkbox" class="med-checkbox" data-key="pos-almoco-litio"><div class="med-label">Lítio<div class="subtext">2 comprimidos</div></div></div>
-    </section>
+        <!-- JEJUM -->
+        <div class="section">
+            <div class="section-header">
+                <span class="section-icon">⏱️</span>
+                <span class="section-title">Jejum</span>
+                <span class="section-badge">antes de tudo</span>
+            </div>
+            <div class="section-body">
+                <div class="med-row" onclick="toggleMed(this, 'jejum-natto')">
+                    <div class="med-check"></div>
+                    <div class="med-info">
+                        <div class="med-name">Nattokinase 150 mg</div>
+                        <div class="med-detail">1 cápsula · enquanto usar hormônios</div>
+                    </div>
+                </div>
+                <div class="med-row" onclick="toggleMed(this, 'jejum-telmisartana')">
+                    <div class="med-check"></div>
+                    <div class="med-info">
+                        <div class="med-name">Telmisartana 40 mg</div>
+                        <div class="med-detail">1 comprimido · enquanto usar hormônios</div>
+                    </div>
+                </div>
+                <div class="med-row" onclick="toggleMed(this, 'jejum-tadalafila')">
+                    <div class="med-check"></div>
+                    <div class="med-info">
+                        <div class="med-name">Tadalafila 5 mg</div>
+                        <div class="med-detail">1 comprimido · todos os dias (prefiro manhã) · enquanto usar hormônios</div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    <section class="section">
-        <div class="section-title">🌙 Noite — 1h antes de deitar</div>
-        <div class="med-item"><input type="checkbox" class="med-checkbox" data-key="noite-glicina"><div class="med-label">Glicina 5 g<div class="subtext">ciclo de 90 dias</div></div></div>
-        <div class="med-item"><input type="checkbox" class="med-checkbox" data-key="noite-litio"><div class="med-label">Lítio<div class="subtext">3 comprimidos</div></div></div>
-    </section>
+        <!-- PÓS ALMOÇO -->
+        <div class="section">
+            <div class="section-header">
+                <span class="section-icon">🍽️</span>
+                <span class="section-title">Pós Almoço</span>
+                <span class="section-badge">após 1ª refeição</span>
+            </div>
+            <div class="section-body">
+                <div class="med-row" onclick="toggleMed(this, 'pos-almoco-omega3')">
+                    <div class="med-check"></div>
+                    <div class="med-info">
+                        <div class="med-name">Ômega 3 2000 mg</div>
+                        <div class="med-detail">pós primeira refeição</div>
+                    </div>
+                </div>
+                <div class="med-row" onclick="toggleMed(this, 'pos-almoco-litio')">
+                    <div class="med-check"></div>
+                    <div class="med-info">
+                        <div class="med-name">Lítio</div>
+                        <div class="med-detail">2 comprimidos</div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    <section class="section">
-        <div class="section-title">⏰ Qualquer horário</div>
-        <div class="med-item"><input type="checkbox" class="med-checkbox" data-key="qualquer-creatina"><div class="med-label">Creatina 5 g<div class="subtext">todos os dias</div></div></div>
-    </section>
+        <!-- NOITE -->
+        <div class="section">
+            <div class="section-header">
+                <span class="section-icon">🌙</span>
+                <span class="section-title">Noite</span>
+                <span class="section-badge">1h antes de deitar</span>
+            </div>
+            <div class="section-body">
+                <div class="med-row" onclick="toggleMed(this, 'noite-glicina')">
+                    <div class="med-check"></div>
+                    <div class="med-info">
+                        <div class="med-name">Glicina 5 g</div>
+                        <div class="med-detail">ciclo de 90 dias</div>
+                    </div>
+                </div>
+                <div class="med-row" onclick="toggleMed(this, 'noite-litio')">
+                    <div class="med-check"></div>
+                    <div class="med-info">
+                        <div class="med-name">Lítio</div>
+                        <div class="med-detail">3 comprimidos</div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    <div class="actions-row">
-        <button class="btn" id="btn-marcar-tudo-hoje">Marcar tudo de hoje</button>
-        <button class="btn btn-secondary" id="btn-limpar-tudo">Limpar tudo</button>
+        <!-- QUALQUER HORÁRIO -->
+        <div class="section">
+            <div class="section-header">
+                <span class="section-icon">⏰</span>
+                <span class="section-title">Qualquer Horário</span>
+            </div>
+            <div class="section-body">
+                <div class="med-row" onclick="toggleMed(this, 'qualquer-creatina')">
+                    <div class="med-check"></div>
+                    <div class="med-info">
+                        <div class="med-name">Creatina 5 g</div>
+                        <div class="med-detail">todos os dias</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- BOTÕES -->
+        <div class="btn-row">
+            <button class="btn btn-primary" onclick="marcarTudo()">✓ Marcar todos</button>
+            <button class="btn btn-danger" onclick="limparTudo()">Limpar dia</button>
+        </div>
     </div>
 
-    <div class="small-info">
-        As marcações são salvas no banco de dados e no navegador.
-    </div>
-</div>
+    <script>
+        const API = '/api/remedios';
+        const today = new Date().toISOString().split('T')[0];
 
-<script>
-const API = '/api/remedios';
-const today = new Date().toISOString().split('T')[0];
-
-function applySavedTheme() {
-    const savedTheme = localStorage.getItem('theme');
-    const icon = document.getElementById('theme-icon');
-    if (savedTheme === 'light') {
-        document.body.classList.add('light-mode');
-        if (icon) icon.textContent = '🌙';
-    } else {
-        document.body.classList.add('dark-mode');
-        if (icon) icon.textContent = '☀️';
-    }
-}
-function toggleThemeMode() {
-    const body = document.body;
-    const icon = document.getElementById('theme-icon');
-    if (body.classList.contains('dark-mode')) {
-        body.classList.remove('dark-mode');
-        body.classList.add('light-mode');
-        localStorage.setItem('theme', 'light');
-        icon.textContent = '🌙';
-    } else {
-        body.classList.remove('light-mode');
-        body.classList.add('dark-mode');
-        localStorage.setItem('theme', 'dark');
-        icon.textContent = '☀️';
-    }
-}
-
-async function salvarRemedio(key, checked) {
-    try {
-        await fetch(API, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ med_key: key, checked, date: today })
-        });
-    } catch(e) {}
-    localStorage.setItem('med-' + key, checked);
-}
-
-async function carregarCheckboxes() {
-    try {
-        const res = await fetch(API + '?date=' + today);
-        const data = await res.json();
-        if (data && data.length > 0) {
-            document.querySelectorAll('.med-checkbox').forEach(box => {
-                const found = data.find(d => d.med_key === box.dataset.key);
-                box.checked = found ? found.checked : false;
-            });
-            return;
+        async function salvarRemedio(key, checked) {
+            try {
+                await fetch(API, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ med_key: key, checked, date: today })
+                });
+            } catch(e) {}
+            localStorage.setItem('med-' + key, checked);
         }
-    } catch(e) {}
-    // fallback localStorage
-    document.querySelectorAll('.med-checkbox').forEach(box => {
-        box.checked = localStorage.getItem('med-' + box.dataset.key) === 'true';
-    });
-}
 
-function marcarTudoHoje() {
-    const items = [];
-    document.querySelectorAll('.med-checkbox').forEach(box => {
-        box.checked = true;
-        localStorage.setItem('med-' + box.dataset.key, true);
-        items.push({ med_key: box.dataset.key, checked: true });
-    });
-    fetch(API + '/bulk', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ items, date: today })
-    }).catch(() => {});
-}
+        function updateProgress() {
+            const rows = document.querySelectorAll('.med-row');
+            const done = document.querySelectorAll('.med-row.done').length;
+            document.getElementById('progress-text').textContent = done + '/' + rows.length + ' concluídos';
+        }
 
-function limparTudo() {
-    const items = [];
-    document.querySelectorAll('.med-checkbox').forEach(box => {
-        box.checked = false;
-        localStorage.setItem('med-' + box.dataset.key, false);
-        items.push({ med_key: box.dataset.key, checked: false });
-    });
-    fetch(API + '/bulk', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ items, date: today })
-    }).catch(() => {});
-}
+        async function carregar() {
+            try {
+                const res = await fetch(API + '?date=' + today);
+                const data = await res.json();
+                if (data && data.length > 0) {
+                    document.querySelectorAll('.med-row').forEach(row => {
+                        const key = row.getAttribute('onclick').match(/'([^']+)'/)[1];
+                        const found = data.find(d => d.med_key === key);
+                        if (found && found.checked) row.classList.add('done');
+                    });
+                    updateProgress();
+                    return;
+                }
+            } catch(e) {}
+            document.querySelectorAll('.med-row').forEach(row => {
+                const key = row.getAttribute('onclick').match(/'([^']+)'/)[1];
+                if (localStorage.getItem('med-' + key) === 'true') row.classList.add('done');
+            });
+            updateProgress();
+        }
 
-document.addEventListener('DOMContentLoaded', () => {
-    applySavedTheme();
-    carregarCheckboxes();
-    document.querySelectorAll('.med-checkbox').forEach(box => {
-        box.addEventListener('change', () => {
-            salvarRemedio(box.dataset.key, box.checked);
-        });
-    });
-    document.getElementById('btn-marcar-tudo-hoje').onclick = marcarTudoHoje;
-    document.getElementById('btn-limpar-tudo').onclick = limparTudo;
-});
-</script>
+        function toggleMed(row, key) {
+            row.classList.toggle('done');
+            row.querySelector('.med-check').classList.add('pop');
+            setTimeout(() => row.querySelector('.med-check').classList.remove('pop'), 300);
+            salvarRemedio(key, row.classList.contains('done'));
+            updateProgress();
+        }
+
+        function marcarTudo() {
+            const items = [];
+            document.querySelectorAll('.med-row').forEach(row => {
+                row.classList.add('done');
+                row.querySelector('.med-check').classList.add('pop');
+                const key = row.getAttribute('onclick').match(/'([^']+)'/)[1];
+                localStorage.setItem('med-' + key, true);
+                items.push({ med_key: key, checked: true });
+            });
+            fetch(API + '/bulk', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ items, date: today })
+            }).catch(() => {});
+            updateProgress();
+        }
+
+        function limparTudo() {
+            const items = [];
+            document.querySelectorAll('.med-row').forEach(row => {
+                row.classList.remove('done');
+                const key = row.getAttribute('onclick').match(/'([^']+)'/)[1];
+                localStorage.setItem('med-' + key, false);
+                items.push({ med_key: key, checked: false });
+            });
+            fetch(API + '/bulk', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ items, date: today })
+            }).catch(() => {});
+            updateProgress();
+        }
+
+        document.addEventListener('DOMContentLoaded', carregar);
+    </script>
 </body>
 </html>
