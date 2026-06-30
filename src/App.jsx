@@ -112,10 +112,16 @@ export default function App() {
     <div style={{ minHeight: '100vh', background: 'linear-gradient(180deg, #0a0e1a, #0f172a)', padding: 20, paddingBottom: 100 }}>
       <div style={{ maxWidth: 440, margin: '0 auto' }}>
         {/* Header */}
-        <div style={{ textAlign: 'center', paddingTop: 30, marginBottom: 32 }}>
+        <div style={{ textAlign: 'center', paddingTop: 30, marginBottom: 32, position: 'relative' }}>
           <h1 style={{ fontSize: 30, fontWeight: 900, background: 'linear-gradient(135deg, #f97316, #fb923c)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', marginBottom: 2 }}>
             Leo Treino
           </h1>
+          <button onClick={() => window.location.reload()} title="Atualizar app" style={{
+            position: 'absolute', top: 30, right: 0,
+            background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)',
+            borderRadius: 8, width: 32, height: 32, color: '#64748b', fontSize: 16,
+            cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}>🔄</button>
         </div>
 
         {/* Workout cards */}
