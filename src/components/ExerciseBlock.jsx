@@ -117,8 +117,16 @@ export default function ExerciseBlock({ exercise, index, forceExpand, workoutKey
       }}>
         <div onClick={() => setExpanded(!expanded)} style={{
           padding: '14px 16px', cursor: 'pointer', display: 'flex',
-          alignItems: 'center', gap: 10,
+          alignItems: 'center', gap: 10, position: 'relative',
         }}>
+          {!isOpen && totalSeries > 0 && (
+            <div style={{
+              position: 'absolute', bottom: 0, left: 0, height: 2,
+              width: `${(doneCount / totalSeries) * 100}%`,
+              background: allDone ? '#4ade80' : '#f97316',
+              transition: 'width 0.4s ease', borderRadius: '0 1px 1px 0',
+            }} />
+          )}
           <span style={{
             background: 'rgba(255,255,255,0.08)', color: '#94a3b8',
             fontSize: 12, fontWeight: 800, minWidth: 24, height: 24,

@@ -20,6 +20,14 @@ export default function SeriesCard({ seriesData, index, completed, savedPeso, sa
     if (savedReps) setReps(String(savedReps))
   }, [savedReps])
 
+  const quickFillPeso = () => {
+    if (savedPeso) setPeso(String(savedPeso))
+  }
+
+  const quickFillReps = () => {
+    if (savedReps) setReps(String(savedReps))
+  }
+
   return (
     <div style={{
       background: completed ? 'rgba(255,255,255,0.02)' : color.bg,
@@ -42,9 +50,18 @@ export default function SeriesCard({ seriesData, index, completed, savedPeso, sa
       </div>
 
       {!completed && (
-        <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: 10, alignItems: 'flex-end' }}>
           <div style={{ flex: 1 }}>
-            <label style={{ fontSize: 9, color: '#64748b', fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1, display: 'block', marginBottom: 4 }}>Reps</label>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginBottom: 4 }}>
+              <label style={{ fontSize: 9, color: '#64748b', fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1 }}>Reps</label>
+              {savedReps && !reps && (
+                <button onClick={quickFillReps} style={{
+                  fontSize: 9, background: 'rgba(249,115,22,0.12)', color: '#f97316',
+                  border: '1px solid rgba(249,115,22,0.25)', borderRadius: 4,
+                  padding: '1px 6px', cursor: 'pointer', fontWeight: 700,
+                }}>{savedReps}</button>
+              )}
+            </div>
             <input
               type="number" placeholder={savedReps || seriesData?.reps || ''} value={reps}
               onChange={e => setReps(e.target.value)}
@@ -52,7 +69,16 @@ export default function SeriesCard({ seriesData, index, completed, savedPeso, sa
             />
           </div>
           <div style={{ flex: 1 }}>
-            <label style={{ fontSize: 9, color: '#64748b', fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1, display: 'block', marginBottom: 4 }}>Peso</label>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginBottom: 4 }}>
+              <label style={{ fontSize: 9, color: '#64748b', fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1 }}>Peso</label>
+              {savedPeso && !peso && (
+                <button onClick={quickFillPeso} style={{
+                  fontSize: 9, background: 'rgba(249,115,22,0.12)', color: '#f97316',
+                  border: '1px solid rgba(249,115,22,0.25)', borderRadius: 4,
+                  padding: '1px 6px', cursor: 'pointer', fontWeight: 700,
+                }}>{savedPeso}kg</button>
+              )}
+            </div>
             <input
               type="number" placeholder={savedPeso || 'kg'} value={peso}
               onChange={e => setPeso(e.target.value)}
@@ -63,7 +89,7 @@ export default function SeriesCard({ seriesData, index, completed, savedPeso, sa
             background: color.border, color: '#fff', border: 'none', borderRadius: 10,
             width: 42, height: 42, fontSize: 18, cursor: 'pointer',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            marginTop: 14, flexShrink: 0,
+            flexShrink: 0, alignSelf: 'flex-end', marginBottom: 1,
           }}>→</button>
         </div>
       )}
