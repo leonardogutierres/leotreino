@@ -1,16 +1,17 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { WORKOUTS } from './data'
 import WorkoutView from './components/WorkoutView'
 import SystemInfo from './components/SystemInfo'
+import { saveCardio as saveCardioAPI, getCardio } from './api'
 
 const CARDIO_TARGET = 180
 const LS_KEY = 'leotreino-cardio'
 
-function loadCardio() {
+function loadCardioLS() {
   try { return JSON.parse(localStorage.getItem(LS_KEY) || '{}') } catch { return {} }
 }
 
-function saveCardio(data) { localStorage.setItem(LS_KEY, JSON.stringify(data)) }
+function saveCardioLS(data) { localStorage.setItem(LS_KEY, JSON.stringify(data)) }
 
 function getWeekMonday() {
   const d = new Date()
@@ -60,10 +61,36 @@ function getTodayWorkoutKey() {
 export default function App() {
   const [view, setView] = useState(null)
   const [showInfo, setShowInfo] = useState(false)
-  const [cardioData, setCardioData] = useState(loadCardio)
+  const [cardioData, setCardioData] = useState({})
   const [cardioInput, setCardioInput] = useState('')
   const [editingCardio, setEditingCardio] = useState(false)
+  const [cardioLoaded, setCardioLoaded] = useState(false)
   const todayWorkoutKey = getTodayWorkoutKey()
+
+  useEffect(() => {
+    async function load() {
+      const weekMon = getWeekMonday()
+      const today = strDate()
+      const fromApi = await getCardio(weekMon, today)
+      const data = {}
+      if (fromApi && fromApi.length > 0) {
+        fromApi.forEach(r => {
+          const d = r.data instanceof Date ? r.data.toISOString().split('T')[0] : String(r.data).split('T')[0]
+          data[d] = r.minutos
+        })
+      }
+      // Fallback to localStorage for any dates not in API
+      const ls = loadCardioLS()
+      for (const [k, v] of Object.entries(ls)) {
+        if (k >= weekMon && !(k in data)) {
+          data[k] = v
+        }
+      }
+      setCardioData(data)
+      setCardioLoaded(true)
+    }
+    load()
+  }, [])
 
   const weekMon = getWeekMonday()
   const todayKey = strDate()
@@ -76,9 +103,11 @@ export default function App() {
   const addCardio = () => {
     const mins = parseInt(cardioInput) || 0
     if (mins <= 0) return
-    const next = { ...cardioData, [todayKey]: (cardioData[todayKey] || 0) + mins }
+    const newTotal = (cardioData[todayKey] || 0) + mins
+    const next = { ...cardioData, [todayKey]: newTotal }
     setCardioData(next)
-    saveCardio(next)
+    saveCardioLS(next)
+    saveCardioAPI({ data: todayKey, minutos: newTotal }).catch(() => {})
     setCardioInput('')
   }
 
@@ -86,7 +115,8 @@ export default function App() {
     const mins = parseInt(cardioInput) || 0
     const next = { ...cardioData, [todayKey]: mins }
     setCardioData(next)
-    saveCardio(next)
+    saveCardioLS(next)
+    saveCardioAPI({ data: todayKey, minutos: mins }).catch(() => {})
     setCardioInput('')
     setEditingCardio(false)
   }

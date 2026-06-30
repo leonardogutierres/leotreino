@@ -70,6 +70,22 @@ async function initDB() {
       data DATE NOT NULL DEFAULT CURRENT_DATE,
       UNIQUE(dia, exercicio_index)
     );
+
+    CREATE TABLE IF NOT EXISTS cardio (
+      id SERIAL PRIMARY KEY,
+      data DATE NOT NULL DEFAULT CURRENT_DATE,
+      minutos INTEGER NOT NULL DEFAULT 0,
+      UNIQUE(data)
+    );
+
+    CREATE TABLE IF NOT EXISTS series_completed (
+      id SERIAL PRIMARY KEY,
+      dia TEXT NOT NULL,
+      exercicio_index INTEGER NOT NULL,
+      serie_index INTEGER NOT NULL,
+      data DATE NOT NULL DEFAULT CURRENT_DATE,
+      UNIQUE(dia, exercicio_index, serie_index, data)
+    );
   `);
   console.log('✅ Tables created/verified');
 }
@@ -186,6 +202,58 @@ app.post('/api/pr', async (req, res) => {
     [dia, exercicio_index, peso]
   );
   res.json(rows[0]);
+});
+
+// ── Cardio ──
+app.get('/api/cardio', async (req, res) => {
+  const { data, from, to } = req.query;
+  if (data) {
+    const { rows } = await pool.query('SELECT * FROM cardio WHERE data = $1', [data]);
+    res.json(rows[0] || { data, minutos: 0 });
+  } else if (from && to) {
+    const { rows } = await pool.query('SELECT * FROM cardio WHERE data >= $1 AND data <= $2 ORDER BY data', [from, to]);
+    res.json(rows);
+  } else {
+    const { rows } = await pool.query('SELECT * FROM cardio ORDER BY data DESC LIMIT 30');
+    res.json(rows);
+  }
+});
+
+app.post('/api/cardio', async (req, res) => {
+  const { data, minutos } = req.body;
+  const d = data || new Date().toISOString().split('T')[0];
+  const { rows } = await pool.query(
+    `INSERT INTO cardio (data, minutos) VALUES ($1, $2)
+     ON CONFLICT (data) DO UPDATE SET minutos = $2
+     RETURNING *`,
+    [d, minutos]
+  );
+  res.json(rows[0]);
+});
+
+// ── Series Completed ──
+app.get('/api/series', async (req, res) => {
+  const { dia, data } = req.query;
+  const params = [];
+  const where = [];
+  if (dia) { params.push(dia); where.push(`dia = $${params.length}`); }
+  if (data) { params.push(data); where.push(`data = $${params.length}`); }
+  const whereSql = where.length ? `WHERE ${where.join(' AND ')}` : '';
+  const { rows } = await pool.query(`SELECT * FROM series_completed ${whereSql} ORDER BY data DESC`, params);
+  res.json(rows);
+});
+
+app.post('/api/series', async (req, res) => {
+  const { dia, exercicio_index, serie_index, data } = req.body;
+  const d = data || new Date().toISOString().split('T')[0];
+  const { rows } = await pool.query(
+    `INSERT INTO series_completed (dia, exercicio_index, serie_index, data)
+     VALUES ($1, $2, $3, $4)
+     ON CONFLICT (dia, exercicio_index, serie_index, data) DO NOTHING
+     RETURNING *`,
+    [dia, exercicio_index, serie_index, d]
+  );
+  res.json(rows[0] || { ok: true });
 });
 
 // ── Timer Config ──

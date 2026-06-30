@@ -56,3 +56,29 @@ export async function saveTimerConfig(duration_sec) {
 export async function getTimerConfig() {
   return fetchJSON('/timer')
 }
+
+export async function saveCardio({ data, minutos }) {
+  return fetchJSON('/cardio', {
+    method: 'POST',
+    body: JSON.stringify({ data, minutos }),
+  })
+}
+
+export async function getCardio(from, to) {
+  const params = []
+  if (from) params.push(`from=${encodeURIComponent(from)}`)
+  if (to) params.push(`to=${encodeURIComponent(to)}`)
+  const qs = params.length ? `?${params.join('&')}` : ''
+  return fetchJSON(`/cardio${qs}`)
+}
+
+export async function saveSeriesCompleted({ dia, exercicio_index, serie_index }) {
+  return fetchJSON('/series', {
+    method: 'POST',
+    body: JSON.stringify({ dia, exercicio_index, serie_index }),
+  })
+}
+
+export async function getSeriesCompleted(dia) {
+  return fetchJSON(`/series?dia=${encodeURIComponent(dia)}`)
+}

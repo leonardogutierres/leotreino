@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { parseSeries, COLORS, findVideo, WORKOUTS } from '../data'
 import SeriesCard from './SeriesCard'
 import VideoModal from './VideoModal'
-import { savePeso, getPesos, savePR, getPRs } from '../api'
+import { savePeso, getPesos, savePR, getPRs, saveSeriesCompleted, getSeriesCompleted } from '../api'
 
 const LS_WEIGHTS_KEY = 'leotreino-weights'
 
@@ -30,6 +30,19 @@ export default function ExerciseBlock({ exercise, index, forceExpand, workoutKey
   useEffect(() => {
     let cancelled = false
     async function load() {
+      // Load completed series from API
+      const seriesFromApi = await getSeriesCompleted(dia)
+      if (!cancelled && seriesFromApi && seriesFromApi.length > 0) {
+        const c = {}
+        seriesFromApi.forEach(row => {
+          if (row.exercicio_index === index) {
+            c[row.serie_index] = true
+          }
+        })
+        setCompletedSeries(c)
+      }
+
+      // Load pesos
       const fromApi = await getPesos(dia)
       if (!cancelled && fromApi && fromApi.length > 0) {
         const w = {}
@@ -57,6 +70,9 @@ export default function ExerciseBlock({ exercise, index, forceExpand, workoutKey
 
   const handleComplete = (seriesIndex, reps, peso) => {
     setCompletedSeries(p => ({ ...p, [seriesIndex]: true }))
+
+    // Save completed series to API
+    saveSeriesCompleted({ dia, exercicio_index: index, serie_index: seriesIndex }).catch(() => {})
 
     if (peso || reps) {
       const pesoNum = parseFloat(peso) || 0
