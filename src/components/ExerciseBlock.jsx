@@ -108,6 +108,16 @@ export default function ExerciseBlock({ exercise, index, forceExpand, workoutKey
     }
   }
 
+  const handleUndo = (seriesIndex) => {
+    setCompletedSeries(p => {
+      const next = { ...p }
+      delete next[seriesIndex]
+      return next
+    })
+    // Delete from DB
+    fetch(`/api/series?dia=${encodeURIComponent(dia)}&exercicio_index=${index}&serie_index=${seriesIndex}`, { method: 'DELETE' }).catch(() => {})
+  }
+
   return (
     <>
       <div style={{
@@ -173,6 +183,7 @@ export default function ExerciseBlock({ exercise, index, forceExpand, workoutKey
                     savedPeso={savedWeights[i] || ''}
                     savedReps={savedReps[i] || ''}
                     onComplete={(reps, peso) => handleComplete(i, reps, peso)}
+                    onUndo={() => handleUndo(i)}
                   />
                 ))}
               </>

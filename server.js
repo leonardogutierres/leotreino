@@ -256,6 +256,16 @@ app.post('/api/series', async (req, res) => {
   res.json(rows[0] || { ok: true });
 });
 
+app.delete('/api/series', async (req, res) => {
+  const { dia, exercicio_index, serie_index, data } = req.query;
+  const d = data || new Date().toISOString().split('T')[0];
+  await pool.query(
+    'DELETE FROM series_completed WHERE dia = $1 AND exercicio_index = $2 AND serie_index = $3 AND data = $4',
+    [dia, exercicio_index, serie_index, d]
+  );
+  res.json({ ok: true });
+});
+
 // ── Timer Config ──
 app.get('/api/timer', async (req, res) => {
   const { rows } = await pool.query("SELECT duration_sec FROM timer_config WHERE user_id = 'default'");

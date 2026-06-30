@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { COLORS } from '../data'
 
-export default function SeriesCard({ seriesData, index, completed, savedPeso, savedReps, onComplete }) {
+export default function SeriesCard({ seriesData, index, completed, savedPeso, savedReps, onComplete, onUndo }) {
   const [reps, setReps] = useState('')
   const [peso, setPeso] = useState('')
   const color = COLORS[seriesData?.color] || {
@@ -95,8 +95,9 @@ export default function SeriesCard({ seriesData, index, completed, savedPeso, sa
       )}
 
       {completed && (
-        <div style={{ fontSize: 10, color: '#4ade80', fontWeight: 600, animation: 'checkPop 0.3s ease-out' }}>
-          ✓ Concluída{peso ? ` · ${peso}kg` : ''}{reps ? ` · ${reps} reps` : ''}
+        <div onClick={onUndo} style={{ fontSize: 10, color: '#4ade80', fontWeight: 600, animation: 'checkPop 0.3s ease-out', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}>
+          <span>✓ Concluída{peso ? ` · ${peso}kg` : ''}{reps ? ` · ${reps} reps` : ''}</span>
+          <span style={{ fontSize: 9, color: '#64748b', textDecoration: 'underline' }}>desfazer</span>
         </div>
       )}
     </div>
