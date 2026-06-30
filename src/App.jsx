@@ -62,6 +62,7 @@ export default function App() {
   const [showInfo, setShowInfo] = useState(false)
   const [cardioData, setCardioData] = useState(loadCardio)
   const [cardioInput, setCardioInput] = useState('')
+  const [editingCardio, setEditingCardio] = useState(false)
   const todayWorkoutKey = getTodayWorkoutKey()
 
   const weekMon = getWeekMonday()
@@ -79,6 +80,20 @@ export default function App() {
     setCardioData(next)
     saveCardio(next)
     setCardioInput('')
+  }
+
+  const saveCardioEdit = () => {
+    const mins = parseInt(cardioInput) || 0
+    const next = { ...cardioData, [todayKey]: mins }
+    setCardioData(next)
+    saveCardio(next)
+    setCardioInput('')
+    setEditingCardio(false)
+  }
+
+  const startEditCardio = () => {
+    setCardioInput(String(todayMin || ''))
+    setEditingCardio(true)
   }
 
   if (view) {
@@ -138,21 +153,53 @@ export default function App() {
             <div style={{ width: `${Math.min(pct, 100)}%`, height: '100%', background: pct >= 100 ? '#4ade80' : '#f97316', borderRadius: 6, transition: 'width 0.5s' }} />
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span style={{ fontSize: 11, color: '#64748b', minWidth: 50 }}>Hoje: {todayMin} min</span>
-            <input
-              type="number" placeholder="min" value={cardioInput}
-              onChange={e => setCardioInput(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && addCardio()}
-              style={{
-                width: 60, background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.1)',
-                borderRadius: 8, padding: '6px 10px', color: '#e2e8f0', fontSize: 14, fontWeight: 700,
-                fontFamily: "'JetBrains Mono', monospace", outline: 'none', textAlign: 'center',
-              }}
-            />
-            <button onClick={addCardio} style={{
-              background: '#ef4444', color: '#fff', border: 'none', borderRadius: 8,
-              padding: '6px 14px', fontSize: 13, fontWeight: 700, cursor: 'pointer',
-            }}>+ Adicionar</button>
+            {editingCardio ? (
+              <>
+                <input
+                  type="number" placeholder="min" value={cardioInput}
+                  onChange={e => setCardioInput(e.target.value)}
+                  onKeyDown={e => e.key === 'Enter' && saveCardioEdit()}
+                  autoFocus
+                  style={{
+                    width: 60, background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(249,115,22,0.4)',
+                    borderRadius: 8, padding: '6px 10px', color: '#e2e8f0', fontSize: 14, fontWeight: 700,
+                    fontFamily: "'JetBrains Mono', monospace", outline: 'none', textAlign: 'center',
+                  }}
+                />
+                <button onClick={saveCardioEdit} style={{
+                  background: '#4ade80', color: '#0a0e1a', border: 'none', borderRadius: 8,
+                  padding: '6px 10px', fontSize: 13, fontWeight: 700, cursor: 'pointer',
+                }}>✓ Salvar</button>
+                <button onClick={() => { setEditingCardio(false); setCardioInput('') }} style={{
+                  background: 'rgba(255,255,255,0.08)', color: '#94a3b8', border: 'none', borderRadius: 8,
+                  padding: '6px 10px', fontSize: 13, fontWeight: 700, cursor: 'pointer',
+                }}>✕</button>
+              </>
+            ) : (
+              <>
+                <span style={{ fontSize: 11, color: '#64748b', minWidth: 50 }}>Hoje: {todayMin} min</span>
+                <button onClick={startEditCardio} style={{
+                  background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)',
+                  borderRadius: 6, width: 24, height: 24, color: '#64748b', fontSize: 11,
+                  cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  flexShrink: 0,
+                }} title="Corrigir">✏️</button>
+                <input
+                  type="number" placeholder="min" value={cardioInput}
+                  onChange={e => setCardioInput(e.target.value)}
+                  onKeyDown={e => e.key === 'Enter' && addCardio()}
+                  style={{
+                    width: 60, background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.1)',
+                    borderRadius: 8, padding: '6px 10px', color: '#e2e8f0', fontSize: 14, fontWeight: 700,
+                    fontFamily: "'JetBrains Mono', monospace", outline: 'none', textAlign: 'center',
+                  }}
+                />
+                <button onClick={addCardio} style={{
+                  background: '#ef4444', color: '#fff', border: 'none', borderRadius: 8,
+                  padding: '6px 14px', fontSize: 13, fontWeight: 700, cursor: 'pointer',
+                }}>+ Adicionar</button>
+              </>
+            )}
             <span style={{ fontSize: 10, color: '#475569', marginLeft: 'auto' }}>110-130 bpm</span>
           </div>
         </div>
