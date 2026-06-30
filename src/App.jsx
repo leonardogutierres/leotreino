@@ -160,15 +160,25 @@ export default function App() {
             <button key={key} onClick={() => setView(key)} style={{
               background: key === todayWorkoutKey ? 'rgba(249,115,22,0.12)' : 'rgba(255,255,255,0.04)',
               border: `1px solid ${key === todayWorkoutKey ? 'rgba(249,115,22,0.35)' : 'rgba(255,255,255,0.08)'}`,
-              borderRadius: 16, padding: 22, cursor: 'pointer', textAlign: 'center', transition: 'all 0.2s', position: 'relative',
+              borderRadius: 16, padding: 22, cursor: 'pointer', textAlign: 'center',
+              transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)', position: 'relative',
+              overflow: 'hidden',
+              boxShadow: key === todayWorkoutKey ? '0 0 20px rgba(249,115,22,0.08)' : 'none',
             }}>
               {key === todayWorkoutKey && (
-                <span style={{ position: 'absolute', top: 6, right: 8, fontSize: 10, color: '#f97316', fontWeight: 700 }}>HOJE</span>
+                <>
+                  <span style={{ position: 'absolute', top: 6, right: 8, fontSize: 10, color: '#f97316', fontWeight: 700,
+                    animation: 'pulse-ring 2s infinite', borderRadius: 8, padding: '2px 8px',
+                    background: 'rgba(249,115,22,0.15)' }}>HOJE</span>
+                  <div style={{ position: 'absolute', top: -20, right: -20, width: 80, height: 80,
+                    background: 'radial-gradient(circle, rgba(249,115,22,0.08), transparent 70%)', borderRadius: '50%' }} />
+                </>
               )}
-              <div style={{ fontSize: 32, fontWeight: 900, fontFamily: "'JetBrains Mono', monospace", color: '#f97316', marginBottom: 6 }}>{key}</div>
-              <div style={{ fontSize: 11, color: '#94a3b8', fontWeight: 500 }}>{w.subtitle}</div>
-              <div style={{ fontSize: 10, color: '#475569', marginTop: 6 }}>{w.day}</div>
-              <div style={{ fontSize: 11, color: '#64748b', marginTop: 2 }}>{w.exercises.length} exercícios</div>
+              <div style={{ fontSize: 32, fontWeight: 900, fontFamily: "'JetBrains Mono', monospace", color: '#f97316', marginBottom: 6,
+                letterSpacing: -1, position: 'relative', zIndex: 1 }}>{key}</div>
+              <div style={{ fontSize: 11, color: '#94a3b8', fontWeight: 500, position: 'relative', zIndex: 1 }}>{w.subtitle}</div>
+              <div style={{ fontSize: 10, color: '#475569', marginTop: 6, position: 'relative', zIndex: 1 }}>{w.day}</div>
+              <div style={{ fontSize: 11, color: '#64748b', marginTop: 2, position: 'relative', zIndex: 1 }}>{w.exercises.length} exercícios</div>
             </button>
           ))}
         </div>
@@ -176,8 +186,10 @@ export default function App() {
         {/* Cardio counter */}
         <div style={{
           marginTop: 24, background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.12)',
-          borderRadius: 14, padding: 16,
+          borderRadius: 16, padding: 18, position: 'relative', overflow: 'hidden',
         }}>
+          <div style={{ position: 'absolute', top: -30, right: -30, width: 100, height: 100,
+            background: 'radial-gradient(circle, rgba(239,68,68,0.06), transparent 70%)', borderRadius: '50%' }} />
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
             <span style={{ fontSize: 14, fontWeight: 800, color: '#ef4444' }}>🏃 Cardio Semanal</span>
             <span style={{ fontSize: 13, fontWeight: 800, color: pct >= 80 ? '#4ade80' : '#f97316', fontFamily: "'JetBrains Mono', monospace" }}>
@@ -244,9 +256,9 @@ export default function App() {
       {/* Bottom nav */}
       <div style={{
         position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 50,
-        background: 'rgba(10,14,26,0.95)', backdropFilter: 'blur(10px)',
-        borderTop: '1px solid rgba(255,255,255,0.08)', padding: '8px 16px',
-        paddingBottom: 'max(8px, env(safe-area-inset-bottom))',
+        background: 'rgba(10,14,26,0.92)', backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)',
+        borderTop: '1px solid rgba(255,255,255,0.06)', padding: '6px 8px',
+        paddingBottom: 'max(6px, env(safe-area-inset-bottom))',
         display: 'flex', justifyContent: 'space-around', alignItems: 'center',
       }}>
         <NavItem label="Treino" emoji="🏋️" active />

@@ -69,7 +69,7 @@ export default function SeriesCard({ seriesData, index, completed, savedPeso, sa
       )}
 
       {completed && (
-        <div style={{ fontSize: 10, color: '#4ade80', fontWeight: 600 }}>
+        <div style={{ fontSize: 10, color: '#4ade80', fontWeight: 600, animation: 'checkPop 0.3s ease-out' }}>
           ✓ Concluída{peso ? ` · ${peso}kg` : ''}{reps ? ` · ${reps} reps` : ''}
         </div>
       )}

@@ -56,15 +56,16 @@ export default function WorkoutView({ workoutKey, onBack, onShowInfo, showInfo, 
       {/* Exercises */}
       <div style={{ padding: '8px 14px', maxWidth: 500, margin: '0 auto' }}>
         {workout.exercises.map((ex, i) => (
-          <ExerciseBlock
-            key={i}
-            exercise={ex}
-            index={i}
-            forceExpand={expandedAll}
-            workoutKey={workoutKey}
-            onCompleteSeries={handleSeriesComplete}
-            activeTimer={activeTimer}
-          />
+          <div key={i} style={{ animation: `fadeInUp 0.3s ease-out ${i * 0.04}s both` }}>
+            <ExerciseBlock
+              exercise={ex}
+              index={i}
+              forceExpand={expandedAll}
+              workoutKey={workoutKey}
+              onCompleteSeries={handleSeriesComplete}
+              activeTimer={activeTimer}
+            />
+          </div>
         ))}
       </div>
 

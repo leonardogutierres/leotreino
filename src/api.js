@@ -8,7 +8,8 @@ async function fetchJSON(path, options = {}) {
     })
     if (!res.ok) return null
     return await res.json()
-  } catch {
+  } catch (e) {
+    console.debug('[api] offline:', path, e.message)
     return null
   }
 }
