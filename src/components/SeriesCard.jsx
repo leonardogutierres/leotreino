@@ -95,9 +95,15 @@ export default function SeriesCard({ seriesData, index, completed, savedPeso, sa
       )}
 
       {completed && (
-        <div onClick={onUndo} style={{ fontSize: 10, color: '#4ade80', fontWeight: 600, animation: 'checkPop 0.3s ease-out', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}>
-          <span>✓ Concluída{peso ? ` · ${peso}kg` : ''}{reps ? ` · ${reps} reps` : ''}</span>
-          <span style={{ fontSize: 9, color: '#64748b', textDecoration: 'underline' }}>desfazer</span>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', animation: 'checkPop 0.3s ease-out' }}>
+          <span style={{ fontSize: 11, color: '#4ade80', fontWeight: 600 }}>
+            ✓ Concluída{peso ? ` · ${peso}kg` : ''}{reps ? ` · ${reps} reps` : ''}
+          </span>
+          <button onClick={onUndo} style={{
+            background: 'rgba(239,68,68,0.12)', border: '1px solid rgba(239,68,68,0.25)',
+            borderRadius: 8, color: '#fca5a5', fontSize: 11, fontWeight: 700,
+            padding: '6px 14px', cursor: 'pointer', minWidth: 44, minHeight: 36,
+          }}>↩ Desfazer</button>
         </div>
       )}
     </div>
