@@ -4,7 +4,7 @@ import ExerciseBlock from './ExerciseBlock'
 import RestTimer from './RestTimer'
 import SystemInfo from './SystemInfo'
 
-export default function WorkoutView({ workoutKey, onBack, showInfo, onCloseInfo }) {
+export default function WorkoutView({ workoutKey, onBack, onShowInfo, showInfo, onCloseInfo }) {
   const [expandedAll, setExpandedAll] = useState(false)
   const [activeTimer, setActiveTimer] = useState(null)
   const workout = WORKOUTS[workoutKey]
@@ -39,7 +39,7 @@ export default function WorkoutView({ workoutKey, onBack, showInfo, onCloseInfo 
         <button onClick={() => setExpandedAll(!expandedAll)} style={btnStyle}>
           {expandedAll ? '⊟' : '⊞'}
         </button>
-        <button onClick={onCloseInfo} style={btnStyle}>?</button>
+        <button onClick={onShowInfo} style={btnStyle}>?</button>
       </div>
 
       {/* Color legend */}

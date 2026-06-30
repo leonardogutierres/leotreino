@@ -30,7 +30,6 @@ export const VIDEOS = {
   'supino vertical articulado reto': 'oYsrCgiua9s',
   'triceps polia barra reta': '1JYgxU-CnNg',
   'triceps testa': 'wNyKZhxdUBA',
-  'face pull': 'X4A5YDIzWe4',
 }
 
 export function parseSeries(seriesStr) {

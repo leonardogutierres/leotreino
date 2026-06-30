@@ -133,13 +133,24 @@ app.post('/api/treinos/historico', async (req, res) => {
 
 // ── Pesos ──
 app.get('/api/pesos', async (req, res) => {
-  const { dia, exercicio_index, serie_index } = req.query;
-  let sql = 'SELECT * FROM pesos WHERE 1=1';
+  const { dia, exercicio_index, serie_index, data } = req.query;
   const params = [];
-  if (dia) { params.push(dia); sql += ` AND dia = $${params.length}`; }
-  if (exercicio_index) { params.push(exercicio_index); sql += ` AND exercicio_index = $${params.length}`; }
-  if (serie_index) { params.push(serie_index); sql += ` AND serie_index = $${params.length}`; }
-  sql += ' ORDER BY data DESC';
+  const where = [];
+
+  if (dia) { params.push(dia); where.push(`dia = $${params.length}`); }
+  if (exercicio_index) { params.push(exercicio_index); where.push(`exercicio_index = $${params.length}`); }
+  if (serie_index) { params.push(serie_index); where.push(`serie_index = $${params.length}`); }
+  if (data) { params.push(data); where.push(`data = $${params.length}`); }
+
+  const whereSql = where.length ? `WHERE ${where.join(' AND ')}` : '';
+  const sql = data
+    ? `SELECT * FROM pesos ${whereSql} ORDER BY data DESC, id DESC`
+    : `SELECT DISTINCT ON (dia, exercicio_index, serie_index)
+         *
+       FROM pesos
+       ${whereSql}
+       ORDER BY dia, exercicio_index, serie_index, data DESC, id DESC`;
+
   const { rows } = await pool.query(sql, params);
   res.json(rows);
 });
